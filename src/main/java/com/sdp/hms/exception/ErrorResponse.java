@@ -10,6 +10,11 @@ public class ErrorResponse {
 	private LocalDateTime timestamp;
 	private String path;
 
+	public ErrorResponse() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
 	public ErrorResponse(String message, HttpStatus status, LocalDateTime timestamp, String path) {
 		super();
 		this.message = message;
