@@ -21,46 +21,38 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class SecurityConfig {
 
-    private JwtAuthEntryPoint authEntryPoint;
-    private CustomUserDetailsService userDetailsService;
-    public SecurityConfig(CustomUserDetailsService userDetailsService, JwtAuthEntryPoint authEntryPoint) {
-        this.userDetailsService = userDetailsService;
-        this.authEntryPoint = authEntryPoint;
-    }
+	private JwtAuthEntryPoint authEntryPoint;
+	private CustomUserDetailsService userDetailsService;
 
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-                .csrf().disable().headers().httpStrictTransportSecurity().disable().and()
-                .exceptionHandling()
-                .authenticationEntryPoint(authEntryPoint)
-                .and()
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .authorizeHttpRequests()
-                .requestMatchers("/hms/auth/**").permitAll()
-                .requestMatchers("/hms/test/**").hasAnyAuthority("USER")
-                .anyRequest().authenticated()
-                .and()
-                .httpBasic();
-        http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
-        return http.build();
-    }
+	public SecurityConfig(CustomUserDetailsService userDetailsService, JwtAuthEntryPoint authEntryPoint) {
+		this.userDetailsService = userDetailsService;
+		this.authEntryPoint = authEntryPoint;
+	}
 
-    @Bean
-    public AuthenticationManager authenticationManager(
-            AuthenticationConfiguration authenticationConfiguration) throws Exception {
-        return authenticationConfiguration.getAuthenticationManager();
-    }
+	@Bean
+	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+		http.csrf().disable().headers().httpStrictTransportSecurity().disable().and().exceptionHandling()
+				.authenticationEntryPoint(authEntryPoint).and().sessionManagement()
+				.sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().authorizeHttpRequests()
+				.requestMatchers("/hms/auth/signin", "/hms/auth/signup", "/hms/auth/me").permitAll()
+				.requestMatchers("/hms/test/**").hasAnyAuthority("USER").anyRequest().authenticated().and().httpBasic();
+		http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+		return http.build();
+	}
 
-    @Bean
-    PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+	@Bean
+	public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
+			throws Exception {
+		return authenticationConfiguration.getAuthenticationManager();
+	}
 
-    @Bean
-    public  JwtAuthenticationFilter jwtAuthenticationFilter() {
-        return new JwtAuthenticationFilter();
-    }
+	@Bean
+	PasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder();
+	}
+
+	@Bean
+	public JwtAuthenticationFilter jwtAuthenticationFilter() {
+		return new JwtAuthenticationFilter();
+	}
 }
