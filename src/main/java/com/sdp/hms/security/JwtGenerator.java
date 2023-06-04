@@ -5,14 +5,14 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
-
-import java.util.Collection;
 import java.util.Date;
-import java.util.Iterator;
-import java.util.function.Function;
+
+/**
+ * 
+ * @author mahesh nidugala
+ *
+ */
 
 @Component
 public class JwtGenerator {

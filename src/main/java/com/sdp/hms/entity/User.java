@@ -2,6 +2,9 @@ package com.sdp.hms.entity;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.validation.constraints.Pattern;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -13,6 +16,12 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
+
+/**
+ * 
+ * @author mahesh nidugala
+ *
+ */
 
 @Entity
 @Table(name = "users")
@@ -27,6 +36,10 @@ public class User {
 
 	@Column(nullable = false, unique = true)
 	private String email;
+	
+	@Column(nullable = false, unique = true)
+	@ValidPhoneNumber
+	private String phone;
 
 	@Column(nullable = false)
 	private String password;
@@ -42,11 +55,12 @@ public class User {
 		// TODO Auto-generated constructor stub
 	}
 
-	public User(Long id, String username, String email, String password, List<Role> roles) {
+	public User(Long id, String username, String email, String phone, String password, List<Role> roles) {
 		super();
 		this.id = id;
 		this.username = username;
 		this.email = email;
+		this.phone = phone;
 		this.password = password;
 		this.roles = roles;
 	}
@@ -59,11 +73,11 @@ public class User {
 		this.id = id;
 	}
 
-	public String getUserName() {
+	public String getUsername() {
 		return username;
 	}
 
-	public void setUserName(String username) {
+	public void setUsername(String username) {
 		this.username = username;
 	}
 
@@ -73,6 +87,14 @@ public class User {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
 	}
 
 	public String getPassword() {
@@ -93,8 +115,9 @@ public class User {
 
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", userName=" + username + ", email=" + email + ", password=" + password + ", roles="
-				+ roles + "]";
+		return "User [id=" + id + ", username=" + username + ", email=" + email + ", phone=" + phone + ", password="
+				+ password + ", roles=" + roles + "]";
 	}
 
+	
 }

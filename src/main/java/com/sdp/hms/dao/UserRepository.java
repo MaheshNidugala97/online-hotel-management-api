@@ -2,9 +2,14 @@ package com.sdp.hms.dao;
 
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
 import com.sdp.hms.entity.User;
+
+/**
+ * 
+ * @author mahesh nidugala
+ *
+ */
 
 public interface UserRepository extends JpaRepository<User, Long> {
 

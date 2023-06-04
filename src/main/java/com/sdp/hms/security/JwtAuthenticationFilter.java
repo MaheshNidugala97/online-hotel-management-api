@@ -9,12 +9,17 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
-
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+
+/**
+ * 
+ * @author mahesh nidugala
+ *
+ */
 
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 	 Logger logger = LoggerFactory.getLogger(JwtAuthenticationFilter.class);

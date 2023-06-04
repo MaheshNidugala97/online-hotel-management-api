@@ -3,6 +3,12 @@ package com.sdp.hms.exception;
 import java.time.LocalDateTime;
 import org.springframework.http.HttpStatus;
 
+/**
+ * 
+ * @author mahesh nidugala
+ *
+ */
+
 public class ErrorResponse {
 
 	private String message;

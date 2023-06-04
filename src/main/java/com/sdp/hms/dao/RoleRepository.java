@@ -6,6 +6,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.sdp.hms.entity.Role;
 
+/**
+ * 
+ * @author mahesh nidugala
+ *
+ */
+
 public interface RoleRepository extends JpaRepository<Role, Long> {
 
 	Optional<Role> findByName(String name);

@@ -12,6 +12,11 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import jakarta.servlet.http.HttpServletRequest;
 
+/**
+ * 
+ * @author mahesh nidugala
+ *
+ */
 
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @ControllerAdvice()
@@ -42,5 +47,13 @@ public class CustomExceptionHandler {
 	}
 	
 
+	@ExceptionHandler(value= {NotFoundException.class})
+	public ResponseEntity<Object> hanldeNotFound(HttpServletRequest req,NotFoundException ex) {
+		
+		ErrorResponse errorResponse=new  ErrorResponse(ex.getMessage().toString(), HttpStatus.NOT_FOUND, LocalDateTime.now(),req.getRequestURI());
+		
+		return new ResponseEntity<>(errorResponse,HttpStatus.NOT_FOUND);
+	}
 	
+
 }

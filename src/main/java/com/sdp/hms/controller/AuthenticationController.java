@@ -1,6 +1,5 @@
 package com.sdp.hms.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -18,6 +17,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.sdp.hms.dao.RoleRepository;
 import java.util.List;
+
+import javax.validation.Valid;
+
 import com.sdp.hms.dao.UserRepository;
 import com.sdp.hms.dto.AuthResponseDto;
 import com.sdp.hms.dto.LoginDto;
@@ -29,6 +31,12 @@ import com.sdp.hms.exception.AccessDeniedException;
 import com.sdp.hms.exception.ApiRequestException;
 import com.sdp.hms.exception.InternalServerException;
 import com.sdp.hms.security.JwtGenerator;
+
+/**
+ * 
+ * @author mahesh nidugala
+ *
+ */
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -45,7 +53,6 @@ public class AuthenticationController {
 
 	private JwtGenerator jwtGenerator;
 
-	private User user;
 
 	public AuthenticationController(UserRepository userRepository, RoleRepository roleRepository,
 			AuthenticationManager authenticationManager, PasswordEncoder passwordEncoder, JwtGenerator jwtGenerator) {
@@ -57,7 +64,7 @@ public class AuthenticationController {
 	}
 
 	@PostMapping("signin")
-	public ResponseEntity<AuthResponseDto> verifyUser(@RequestBody LoginDto loginDto) {
+	public ResponseEntity<AuthResponseDto> verifyUser(@RequestBody  LoginDto loginDto ) {
 		try {
 
 			Authentication authentication = authenticationManager
@@ -73,7 +80,7 @@ public class AuthenticationController {
 	}
 
 	@PostMapping("signup")
-	public ResponseEntity<?> registerUser(@RequestBody RegistrationDto registrationDto) {
+	public ResponseEntity<?> registerUser(@Valid @RequestBody RegistrationDto registrationDto) {
 
 		try {
 
@@ -87,8 +94,9 @@ public class AuthenticationController {
 			}
 
 			User user = new User();
-			user.setUserName(registrationDto.getUsername());
+			user.setUsername(registrationDto.getUsername());
 			user.setEmail(registrationDto.getEmail());
+			user.setPhone(registrationDto.getPhone());
 			user.setPassword(passwordEncoder.encode(registrationDto.getPassword()));
 
 			Role roles = roleRepository.findByName("USER").get();
