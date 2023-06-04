@@ -1,8 +1,10 @@
 package com.sdp.hms.dto;
 
-import java.util.List;
-
-import com.sdp.hms.entity.Role;
+/**
+ * 
+ * @author mahesh nidugala
+ *
+ */
 
 public class AuthResponseDto {
     private String accessToken;

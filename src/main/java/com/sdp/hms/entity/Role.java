@@ -7,6 +7,12 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
+/**
+ * 
+ * @author mahesh nidugala
+ *
+ */
+
 @Entity
 @Table(name = "roles")
 public class Role {

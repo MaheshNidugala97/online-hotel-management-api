@@ -7,13 +7,17 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-
 import com.sdp.hms.dao.UserRepository;
 import com.sdp.hms.entity.Role;
-
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
+
+/**
+ * 
+ * @author mahesh nidugala
+ *
+ */
 
 @Service
 public class CustomUserDetailsService  implements UserDetailsService {

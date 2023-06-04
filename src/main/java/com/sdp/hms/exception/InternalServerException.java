@@ -2,6 +2,12 @@ package com.sdp.hms.exception;
 
 import org.springframework.stereotype.Service;
 
+/**
+ * 
+ * @author mahesh nidugala
+ *
+ */
+
 @Service
 public class InternalServerException extends RuntimeException{
 
