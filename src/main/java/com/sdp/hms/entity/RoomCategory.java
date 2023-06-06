@@ -1,5 +1,7 @@
 package com.sdp.hms.entity;
 
+import java.util.Arrays;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -26,25 +28,34 @@ public class RoomCategory {
 
 	@Column(nullable = false)
 	private Integer rooms;
-	
+
 	@Column(nullable = false)
 	private Long size;
-	
+
 	@Column(nullable = false)
 	private Long price;
+
+	@Column(name = "max_people_allowed")
+	private Integer maxPeopleAllowed;
+
+	@Column(name = "imagedata", length = 1000)
+	private byte[] imageData;
 
 	public RoomCategory() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public RoomCategory(Long id, String title, Integer rooms, Long size, Long price) {
+	public RoomCategory(Long id, String title, Integer rooms, Long size, Long price, Integer maxPeopleAllowed,
+			byte[] imageData) {
 		super();
 		this.id = id;
 		this.title = title;
 		this.rooms = rooms;
 		this.size = size;
 		this.price = price;
+		this.maxPeopleAllowed = maxPeopleAllowed;
+		this.imageData = imageData;
 	}
 
 	public Long getId() {
@@ -87,13 +98,26 @@ public class RoomCategory {
 		this.price = price;
 	}
 
+	public Integer getMaxPeopleAllowed() {
+		return maxPeopleAllowed;
+	}
+
+	public void setMaxPeopleAllowed(Integer maxPeopleAllowed) {
+		this.maxPeopleAllowed = maxPeopleAllowed;
+	}
+
+	public byte[] getImageData() {
+		return imageData;
+	}
+
+	public void setImageData(byte[] imageData) {
+		this.imageData = imageData;
+	}
+
 	@Override
 	public String toString() {
 		return "RoomCategory [id=" + id + ", title=" + title + ", rooms=" + rooms + ", size=" + size + ", price="
-				+ price + "]";
+				+ price + ", maxPeopleAllowed=" + maxPeopleAllowed + ", imageData=" + Arrays.toString(imageData) + "]";
 	}
-	
-
-	
 
 }

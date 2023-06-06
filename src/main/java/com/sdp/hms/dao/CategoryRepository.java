@@ -1,8 +1,8 @@
 package com.sdp.hms.dao;
 
-import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import com.sdp.hms.entity.RoomCategory;
 
 /**
@@ -13,8 +13,8 @@ import com.sdp.hms.entity.RoomCategory;
 
 public interface CategoryRepository  extends JpaRepository<RoomCategory, Long>{
 	
-//	@Query("SELECT * from room_category u where u.title=?1")
-	
+	@Query("SELECT u from RoomCategory  u where u.title=?1")
+	RoomCategory findByTitle(String title);
 	
 	Boolean existsByTitle(String title);
 	
