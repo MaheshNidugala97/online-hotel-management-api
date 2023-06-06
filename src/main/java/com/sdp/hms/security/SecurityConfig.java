@@ -37,7 +37,8 @@ public class SecurityConfig {
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().authorizeHttpRequests()
 				.requestMatchers("/hms/auth/signin", "/hms/auth/signup", "/hms/auth/me").permitAll()
 				.requestMatchers("/hms/test/**").hasAnyAuthority("USER").requestMatchers("/hms/admin/**")
-				.hasAnyAuthority("ADMIN").anyRequest().authenticated().and().httpBasic();
+				.hasAnyAuthority("ADMIN").requestMatchers("/hms/**").hasAnyAuthority("ADMIN","USER").anyRequest()
+				.authenticated().and().httpBasic();
 		http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 		return http.build();
 	}

@@ -14,7 +14,7 @@ public class CategoryDto {
 
 	private Long size;
 
-	private Long price;
+	private Double price;
 
 	private Integer maxPeopleAllowed;
 
@@ -23,7 +23,7 @@ public class CategoryDto {
 		// TODO Auto-generated constructor stub
 	}
 
-	public CategoryDto(String title, Integer rooms, Long size, Long price, Integer maxPeopleAllowed) {
+	public CategoryDto(String title, Integer rooms, Long size, Double price, Integer maxPeopleAllowed) {
 		super();
 		this.title = title;
 		this.rooms = rooms;
@@ -56,11 +56,11 @@ public class CategoryDto {
 		this.size = size;
 	}
 
-	public Long getPrice() {
+	public Double getPrice() {
 		return price;
 	}
 
-	public void setPrice(Long price) {
+	public void setPrice(Double price) {
 		this.price = price;
 	}
 
