@@ -3,8 +3,13 @@ package com.sdp.hms.util;
 import java.io.ByteArrayOutputStream;
 import java.util.zip.Deflater;
 import java.util.zip.Inflater;
-
 import org.springframework.stereotype.Service;
+
+/**
+ * 
+ * @author mahesh nidugala
+ *
+ */
 
 @Service
 public class ImageUtil {

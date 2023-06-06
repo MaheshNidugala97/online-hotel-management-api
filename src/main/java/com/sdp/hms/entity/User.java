@@ -2,9 +2,6 @@ package com.sdp.hms.entity;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.validation.constraints.Pattern;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -36,7 +33,7 @@ public class User {
 
 	@Column(nullable = false, unique = true)
 	private String email;
-	
+
 	@Column(nullable = false, unique = true)
 	@ValidPhoneNumber
 	private String phone;
@@ -119,5 +116,4 @@ public class User {
 				+ password + ", roles=" + roles + "]";
 	}
 
-	
 }
