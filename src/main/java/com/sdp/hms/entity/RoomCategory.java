@@ -33,7 +33,7 @@ public class RoomCategory {
 	private Long size;
 
 	@Column(nullable = false)
-	private Long price;
+	private Double price;
 
 	@Column(name = "max_people_allowed")
 	private Integer maxPeopleAllowed;
@@ -46,7 +46,7 @@ public class RoomCategory {
 		// TODO Auto-generated constructor stub
 	}
 
-	public RoomCategory(Long id, String title, Integer rooms, Long size, Long price, Integer maxPeopleAllowed,
+	public RoomCategory(Long id, String title, Integer rooms, Long size, Double price, Integer maxPeopleAllowed,
 			byte[] imageData) {
 		super();
 		this.id = id;
@@ -90,11 +90,11 @@ public class RoomCategory {
 		this.size = size;
 	}
 
-	public Long getPrice() {
+	public Double getPrice() {
 		return price;
 	}
 
-	public void setPrice(Long price) {
+	public void setPrice(Double price) {
 		this.price = price;
 	}
 
