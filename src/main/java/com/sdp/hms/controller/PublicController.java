@@ -1,5 +1,6 @@
 package com.sdp.hms.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,9 +83,9 @@ public class PublicController {
 	}
 
 	@GetMapping("rooms")
-	public List<Rooms> getAllRooms(@RequestParam(defaultValue = "true") Optional<Boolean> isActive) {
+	public List<Rooms> getAllRooms(@RequestParam(defaultValue = "true") Boolean isActive) {
 		try {
-			return roomRepository.findByIsActive(isActive.get());
+			return roomRepository.findByIsActive(isActive);
 		} catch (Exception e) {
 			if (e.getMessage() == "No value present") {
 				throw new NotFoundException(e.getMessage());
@@ -96,13 +97,20 @@ public class PublicController {
 
 	}
 
-	@GetMapping("room/roomno/{number}")
-	public Rooms getRoomByNumber(@PathVariable Integer number, @RequestParam Optional<Boolean> isActive) {
+	@GetMapping("room")
+	public List<Rooms> getRoomByNumber(@RequestParam String roomNumbers) {
 		try {
-			return roomRepository.findByRoomNoAndIsActive(number, isActive.get());
+
+			List<Integer> listRoomNumbers = new ArrayList<>();
+			String[] arrayRoomNumbers = roomNumbers.split(",");
+			for (String roomNumber : arrayRoomNumbers) {
+				Integer roomNo=Integer.parseInt(roomNumber);
+				listRoomNumbers.add(roomNo);
+			}
+			return roomRepository.findByAllRoomNo(listRoomNumbers);
 		} catch (Exception e) {
 			if (e.getMessage() == "No value present") {
-				throw new NotFoundException(e.getMessage() + " for room number " + number);
+				throw new NotFoundException(e.getMessage() + " for room number " + roomNumbers);
 
 			} else {
 				throw new InternalServerException(e.getMessage());
@@ -178,5 +186,24 @@ public class PublicController {
 		}
 
 	}
+
+//	@PostMapping(value = "booking/room/roomno/{}")
+//	public ResponseEntity<?> bookRoom() {
+//		try {
+//			if (categoryRepository.existsByTitle(categoryDto.getTitle())
+//					&& categoryRepository.existsBySize(categoryDto.getSize())) {
+//				throw new ApiRequestException("Category with  " + categoryDto.getTitle() + " " + categoryDto.getSize()
+//						+ " mts sqr already Exists");
+//			}
+//			categoryService.addCategory(categoryDto, file);
+//			return ResponseEntity.status(HttpStatus.OK).body(categoryDto.getTitle() + " successfully added");
+//		} catch (ApiRequestException e) {
+//			throw new ApiRequestException(e.getMessage());
+//		} catch (Exception e) {
+//			throw new InternalServerException("Internal Server Error");
+//		}
+//
+//	}
+//	
 
 }

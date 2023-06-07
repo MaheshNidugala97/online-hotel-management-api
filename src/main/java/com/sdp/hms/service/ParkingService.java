@@ -3,15 +3,12 @@ package com.sdp.hms.service;
 import java.lang.reflect.Field;
 import java.util.Map;
 import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ReflectionUtils;
-
 import com.sdp.hms.dao.ParkingRepository;
 import com.sdp.hms.dto.ParkingDto;
 import com.sdp.hms.entity.Parking;
-import com.sdp.hms.entity.RoomCategory;
 
 /**
  * 
