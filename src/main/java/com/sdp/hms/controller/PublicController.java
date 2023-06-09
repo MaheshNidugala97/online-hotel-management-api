@@ -4,9 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,6 +20,7 @@ import com.sdp.hms.dao.RoomRepository;
 import com.sdp.hms.entity.Parking;
 import com.sdp.hms.entity.RoomCategory;
 import com.sdp.hms.entity.Rooms;
+import com.sdp.hms.exception.ApiRequestException;
 import com.sdp.hms.exception.InternalServerException;
 import com.sdp.hms.exception.NotFoundException;
 
@@ -100,16 +105,16 @@ public class PublicController {
 	}
 
 	@GetMapping("room")
-	public List<Rooms> getRoomByNumber(@RequestParam String roomNumbers) {
+	public List<Rooms> getRoomByNumbers(@RequestParam String roomNumbers, @RequestParam Boolean isActive) {
 		try {
 
 			List<Integer> listRoomNumbers = new ArrayList<>();
 			String[] arrayRoomNumbers = roomNumbers.split(",");
 			for (String roomNumber : arrayRoomNumbers) {
-				Integer roomNo=Integer.parseInt(roomNumber);
+				Integer roomNo = Integer.parseInt(roomNumber);
 				listRoomNumbers.add(roomNo);
 			}
-			return roomRepository.findByAllRoomNo(listRoomNumbers);
+			return roomRepository.findByAllRoomNo(listRoomNumbers, isActive);
 		} catch (Exception e) {
 			if (e.getMessage() == "No value present") {
 				throw new NotFoundException(e.getMessage() + " for room number " + roomNumbers);
@@ -137,10 +142,15 @@ public class PublicController {
 	}
 
 	@GetMapping("rooms/category/title/{title}")
-	public List<Rooms> getRoomByCategory(@RequestParam(defaultValue = "true") Boolean isActive,
+	public List<Rooms> getRoomsByCategory(@RequestParam(defaultValue = "true") Boolean isActive,
 			@PathVariable String title) {
 		try {
-			return roomRepository.findByCategory(title, isActive);
+			List<Rooms> listOfRooms=roomRepository.findByCategory(title, isActive);
+			if (listOfRooms.isEmpty()) {
+				throw new NotFoundException("Rooms not found for category "+ title );
+			}
+			return listOfRooms;
+				
 		} catch (Exception e) {
 			if (e.getMessage() == "No value present") {
 				throw new NotFoundException(e.getMessage());
@@ -155,7 +165,14 @@ public class PublicController {
 	@GetMapping("parking")
 	public List<Parking> getAllParking() {
 		try {
-			return parkingRepository.findAll();
+			List<Parking> listOfParking = parkingRepository.findAll();
+			if (listOfParking.isEmpty()) {
+				throw new NotFoundException("Parkings not found");
+			}
+			return listOfParking;
+		} catch (NotFoundException e) {
+			throw new NotFoundException(e.getMessage());
+
 		} catch (Exception e) {
 			if (e.getMessage() == "No value present") {
 				throw new NotFoundException(e.getMessage());
@@ -189,14 +206,10 @@ public class PublicController {
 
 	}
 
-//	@PostMapping(value = "booking/room/roomno/{}")
-//	public ResponseEntity<?> bookRoom() {
+//	@PostMapping(value = "booking/room")
+//	public ResponseEntity<?> bookRoom(@RequestBody String roomNumbers) {
 //		try {
-//			if (categoryRepository.existsByTitle(categoryDto.getTitle())
-//					&& categoryRepository.existsBySize(categoryDto.getSize())) {
-//				throw new ApiRequestException("Category with  " + categoryDto.getTitle() + " " + categoryDto.getSize()
-//						+ " mts sqr already Exists");
-//			}
+//
 //			categoryService.addCategory(categoryDto, file);
 //			return ResponseEntity.status(HttpStatus.OK).body(categoryDto.getTitle() + " successfully added");
 //		} catch (ApiRequestException e) {
@@ -206,6 +219,5 @@ public class PublicController {
 //		}
 //
 //	}
-//	
 
 }

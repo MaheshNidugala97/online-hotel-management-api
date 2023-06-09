@@ -1,6 +1,7 @@
 package com.sdp.hms.controller;
 
 import java.io.IOException;
+import java.util.Base64;
 import java.util.Map;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,6 +79,8 @@ public class AdminController {
 						+ " mts sqr already Exists");
 			}
 			categoryService.addCategory(categoryDto, file);
+//			Base64.getEncoder().encodeToString();
+
 			return ResponseEntity.status(HttpStatus.OK).body(categoryDto.getTitle() + " successfully added");
 		} catch (ApiRequestException e) {
 			throw new ApiRequestException(e.getMessage());
