@@ -34,7 +34,7 @@ public class CategoryService {
 		roomCategory.setSize(categoryDto.getSize());
 		roomCategory.setPrice(categoryDto.getPrice());
 		roomCategory.setMaxPeopleAllowed(categoryDto.getMaxPeopleAllowed());
-		roomCategory.setImageData(ImageUtil.compressImage(file.getBytes()));
+		roomCategory.setImageData(file.getBytes());
 		categoryRepository.save(roomCategory);
 	}
 
@@ -45,7 +45,7 @@ public class CategoryService {
 		roomCategory.setSize(categoryDto.getSize());
 		roomCategory.setPrice(categoryDto.getPrice());
 		roomCategory.setMaxPeopleAllowed(categoryDto.getMaxPeopleAllowed());
-		roomCategory.setImageData(ImageUtil.compressImage(file.getBytes()));
+		roomCategory.setImageData(file.getBytes());
 		categoryRepository.save(roomCategory);
 	}
 

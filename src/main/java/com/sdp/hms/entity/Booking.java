@@ -1,6 +1,8 @@
 package com.sdp.hms.entity;
 
 import java.time.LocalDateTime;
+import java.util.List;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -9,6 +11,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
@@ -38,9 +41,9 @@ public class Booking {
 	@Column(name = "number_of_guests", nullable = false)
 	private Integer numberOfGuests;
 
-	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinColumn(name = "rooms")
-	private Rooms rooms;
+	private List<Rooms> rooms;
 
 	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinColumn(name = "parking")
@@ -58,7 +61,7 @@ public class Booking {
 	}
 
 	public Booking(Long id, String userName, LocalDateTime arrivalDate, LocalDateTime departureDate,
-			Integer numberOfGuests, Rooms rooms, Parking parking, Double amount, String paymentType) {
+			Integer numberOfGuests, List<Rooms> rooms, Parking parking, Double amount, String paymentType) {
 		super();
 		this.id = id;
 		this.userName = userName;
@@ -111,11 +114,11 @@ public class Booking {
 		this.numberOfGuests = numberOfGuests;
 	}
 
-	public Rooms getRooms() {
+	public List<Rooms> getRooms() {
 		return rooms;
 	}
 
-	public void setRooms(Rooms rooms) {
+	public void setRooms(List<Rooms> rooms) {
 		this.rooms = rooms;
 	}
 
@@ -150,4 +153,5 @@ public class Booking {
 				+ ", amount=" + amount + ", paymentType=" + paymentType + "]";
 	}
 
+	
 }

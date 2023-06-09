@@ -38,7 +38,7 @@ public class RoomCategory {
 	@Column(name = "max_people_allowed")
 	private Integer maxPeopleAllowed;
 
-	@Column(name = "imagedata", length = 1000)
+	@Column(name = "imagedata", length = 64000)
 	private byte[] imageData;
 
 	public RoomCategory() {
