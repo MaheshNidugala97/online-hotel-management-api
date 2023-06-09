@@ -4,12 +4,10 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.Map;
 import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.web.multipart.MultipartFile;
-
 import com.sdp.hms.dao.CategoryRepository;
 import com.sdp.hms.dto.CategoryDto;
 import com.sdp.hms.entity.RoomCategory;
@@ -22,10 +20,13 @@ import com.sdp.hms.util.ImageUtil;
  */
 
 @Service
-public class CategoryService {
+public class CategoryService  {
 
 	@Autowired
 	CategoryRepository categoryRepository;
+	
+
+
 
 	public void addCategory(CategoryDto categoryDto, MultipartFile file) throws IOException {
 		RoomCategory roomCategory = new RoomCategory();
@@ -34,19 +35,18 @@ public class CategoryService {
 		roomCategory.setSize(categoryDto.getSize());
 		roomCategory.setPrice(categoryDto.getPrice());
 		roomCategory.setMaxPeopleAllowed(categoryDto.getMaxPeopleAllowed());
-		roomCategory.setImageData(file.getBytes());
+		roomCategory.setImageData(ImageUtil.compressImage(file.getBytes()));
 		categoryRepository.save(roomCategory);
 	}
 
 	public void updateCategory(RoomCategory roomCategory, CategoryDto categoryDto, MultipartFile file)
 			throws IOException {
-		roomCategory.setImageData(null);
 		roomCategory.setTitle(categoryDto.getTitle());
 		roomCategory.setRooms(categoryDto.getRooms());
 		roomCategory.setSize(categoryDto.getSize());
 		roomCategory.setPrice(categoryDto.getPrice());
 		roomCategory.setMaxPeopleAllowed(categoryDto.getMaxPeopleAllowed());
-		roomCategory.setImageData(file.getBytes());
+		roomCategory.setImageData(ImageUtil.compressImage(file.getBytes()));		
 		categoryRepository.save(roomCategory);
 	}
 
@@ -61,5 +61,8 @@ public class CategoryService {
 		}
 		return null;
 	}
+	
+	
+	
 
 }
