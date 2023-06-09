@@ -11,7 +11,6 @@ import org.springframework.web.multipart.MultipartFile;
 import com.sdp.hms.dao.CategoryRepository;
 import com.sdp.hms.dto.CategoryDto;
 import com.sdp.hms.entity.RoomCategory;
-import com.sdp.hms.util.ImageUtil;
 
 /**
  * 
@@ -35,7 +34,7 @@ public class CategoryService  {
 		roomCategory.setSize(categoryDto.getSize());
 		roomCategory.setPrice(categoryDto.getPrice());
 		roomCategory.setMaxPeopleAllowed(categoryDto.getMaxPeopleAllowed());
-		roomCategory.setImageData(ImageUtil.compressImage(file.getBytes()));
+		roomCategory.setImageData(file.getBytes());
 		categoryRepository.save(roomCategory);
 	}
 
@@ -46,7 +45,7 @@ public class CategoryService  {
 		roomCategory.setSize(categoryDto.getSize());
 		roomCategory.setPrice(categoryDto.getPrice());
 		roomCategory.setMaxPeopleAllowed(categoryDto.getMaxPeopleAllowed());
-		roomCategory.setImageData(ImageUtil.compressImage(file.getBytes()));		
+		roomCategory.setImageData(file.getBytes());		
 		categoryRepository.save(roomCategory);
 	}
 
