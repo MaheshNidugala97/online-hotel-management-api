@@ -40,6 +40,7 @@ public class CategoryService {
 
 	public void updateCategory(RoomCategory roomCategory, CategoryDto categoryDto, MultipartFile file)
 			throws IOException {
+		roomCategory.setImageData(null);
 		roomCategory.setTitle(categoryDto.getTitle());
 		roomCategory.setRooms(categoryDto.getRooms());
 		roomCategory.setSize(categoryDto.getSize());
