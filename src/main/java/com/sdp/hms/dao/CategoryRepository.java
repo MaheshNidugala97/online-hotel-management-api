@@ -18,7 +18,7 @@ public interface CategoryRepository  extends JpaRepository<RoomCategory, Long>{
 	
 	Boolean existsByTitle(String title);
 	
-	Boolean existsBySize(Long size);
+	Boolean existsBySize(Double size);
 	
 	
 
