@@ -23,8 +23,6 @@ public class CategoryService  {
 
 	@Autowired
 	CategoryRepository categoryRepository;
-	
-
 
 
 	public void addCategory(CategoryDto categoryDto, MultipartFile file) throws IOException {
