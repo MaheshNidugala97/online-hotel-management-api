@@ -30,7 +30,7 @@ public class RoomCategory {
 	private Integer rooms;
 
 	@Column(nullable = false)
-	private Long size;
+	private Double size;
 
 	@Column(nullable = false)
 	private Double price;
@@ -46,7 +46,7 @@ public class RoomCategory {
 		// TODO Auto-generated constructor stub
 	}
 
-	public RoomCategory(Long id, String title, Integer rooms, Long size, Double price, Integer maxPeopleAllowed,
+	public RoomCategory(Long id, String title, Integer rooms, Double size, Double price, Integer maxPeopleAllowed,
 			byte[] imageData) {
 		super();
 		this.id = id;
@@ -82,11 +82,11 @@ public class RoomCategory {
 		this.rooms = rooms;
 	}
 
-	public Long getSize() {
+	public Double getSize() {
 		return size;
 	}
 
-	public void setSize(Long size) {
+	public void setSize(Double size) {
 		this.size = size;
 	}
 
