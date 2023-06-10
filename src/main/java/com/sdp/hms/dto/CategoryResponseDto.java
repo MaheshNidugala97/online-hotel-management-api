@@ -1,7 +1,5 @@
 package com.sdp.hms.dto;
 
-import jakarta.persistence.Column;
-
 public class CategoryResponseDto {
 	
 	private Long id;
