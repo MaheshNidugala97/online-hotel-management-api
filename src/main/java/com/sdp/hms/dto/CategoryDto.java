@@ -12,9 +12,9 @@ public class CategoryDto {
 
 	private Integer rooms;
 
-	private Double size;
+	private String size;
 
-	private Double price;
+	private String price;
 
 	private Integer maxPeopleAllowed;
 
@@ -23,7 +23,7 @@ public class CategoryDto {
 		// TODO Auto-generated constructor stub
 	}
 
-	public CategoryDto(String title, Integer rooms, Double size, Double price, Integer maxPeopleAllowed) {
+	public CategoryDto(String title, Integer rooms, String size, String price, Integer maxPeopleAllowed) {
 		super();
 		this.title = title;
 		this.rooms = rooms;
@@ -48,19 +48,19 @@ public class CategoryDto {
 		this.rooms = rooms;
 	}
 
-	public Double getSize() {
+	public String getSize() {
 		return size;
 	}
 
-	public void setSize(Double size) {
+	public void setSize(String size) {
 		this.size = size;
 	}
 
-	public Double getPrice() {
+	public String getPrice() {
 		return price;
 	}
 
-	public void setPrice(Double price) {
+	public void setPrice(String price) {
 		this.price = price;
 	}
 
@@ -77,5 +77,6 @@ public class CategoryDto {
 		return "CategoryDto [title=" + title + ", rooms=" + rooms + ", size=" + size + ", price=" + price
 				+ ", maxPeopleAllowed=" + maxPeopleAllowed + "]";
 	}
+
 
 }

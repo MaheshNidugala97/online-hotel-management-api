@@ -2,7 +2,6 @@ package com.sdp.hms.entity;
 
 import java.time.LocalDateTime;
 import java.util.List;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -29,8 +28,9 @@ public class Booking {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(name = "user_name", nullable = false)
-	private String userName;
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@JoinColumn(name = "guests")
+	private List<Guests> guests;
 
 	@Column(name = "arrival_date", nullable = false)
 	private LocalDateTime arrivalDate;
@@ -60,11 +60,11 @@ public class Booking {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Booking(Long id, String userName, LocalDateTime arrivalDate, LocalDateTime departureDate,
+	public Booking(Long id, List<Guests> guests, LocalDateTime arrivalDate, LocalDateTime departureDate,
 			Integer numberOfGuests, List<Rooms> rooms, Parking parking, Double amount, String paymentType) {
 		super();
 		this.id = id;
-		this.userName = userName;
+		this.guests = guests;
 		this.arrivalDate = arrivalDate;
 		this.departureDate = departureDate;
 		this.numberOfGuests = numberOfGuests;
@@ -82,12 +82,12 @@ public class Booking {
 		this.id = id;
 	}
 
-	public String getUserName() {
-		return userName;
+	public List<Guests> getGuests() {
+		return guests;
 	}
 
-	public void setUserName(String userName) {
-		this.userName = userName;
+	public void setGuests(List<Guests> guests) {
+		this.guests = guests;
 	}
 
 	public LocalDateTime getArrivalDate() {
@@ -146,12 +146,4 @@ public class Booking {
 		this.paymentType = paymentType;
 	}
 
-	@Override
-	public String toString() {
-		return "Booking [id=" + id + ", userName=" + userName + ", arrivalDate=" + arrivalDate + ", departureDate="
-				+ departureDate + ", numberOfGuests=" + numberOfGuests + ", rooms=" + rooms + ", parking=" + parking
-				+ ", amount=" + amount + ", paymentType=" + paymentType + "]";
-	}
-
-	
 }

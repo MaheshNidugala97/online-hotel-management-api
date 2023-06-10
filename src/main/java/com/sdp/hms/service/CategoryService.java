@@ -29,8 +29,8 @@ public class CategoryService  {
 		RoomCategory roomCategory = new RoomCategory();
 		roomCategory.setTitle(categoryDto.getTitle());
 		roomCategory.setRooms(categoryDto.getRooms());
-		roomCategory.setSize(categoryDto.getSize());
-		roomCategory.setPrice(categoryDto.getPrice());
+		roomCategory.setSize(Double.valueOf(categoryDto.getSize()));
+		roomCategory.setPrice(Double.valueOf(categoryDto.getPrice()));
 		roomCategory.setMaxPeopleAllowed(categoryDto.getMaxPeopleAllowed());
 		roomCategory.setImageData(file.getBytes());
 		categoryRepository.save(roomCategory);
@@ -40,8 +40,8 @@ public class CategoryService  {
 			throws IOException {
 		roomCategory.setTitle(categoryDto.getTitle());
 		roomCategory.setRooms(categoryDto.getRooms());
-		roomCategory.setSize(categoryDto.getSize());
-		roomCategory.setPrice(categoryDto.getPrice());
+		roomCategory.setSize(Double.valueOf(categoryDto.getSize()));
+		roomCategory.setPrice(Double.valueOf(categoryDto.getPrice()));
 		roomCategory.setMaxPeopleAllowed(categoryDto.getMaxPeopleAllowed());
 		roomCategory.setImageData(file.getBytes());		
 		categoryRepository.save(roomCategory);
@@ -52,6 +52,10 @@ public class CategoryService  {
 			fields.get().forEach((key, value) -> {
 				Field field = ReflectionUtils.findField(RoomCategory.class, key);
 				field.setAccessible(true);
+				if(key=="size" || key=="price")
+				{
+					value=Double.valueOf((String) value);
+				}
 				ReflectionUtils.setField(field, roomCategory, value);
 			});
 			return categoryRepository.save(roomCategory);
