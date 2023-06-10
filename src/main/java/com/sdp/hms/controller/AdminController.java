@@ -73,8 +73,7 @@ public class AdminController {
 	public ResponseEntity<?> addCategory(@RequestPart("categoryDto") CategoryDto categoryDto,
 			@RequestPart("image") MultipartFile file) {
 		try {
-			if (categoryRepository.existsByTitle(categoryDto.getTitle())
-					&& categoryRepository.existsBySize(categoryDto.getSize())) {
+			if (categoryRepository.existsByTitle(categoryDto.getTitle())) {
 				throw new ApiRequestException("Category with  " + categoryDto.getTitle() + " " + categoryDto.getSize()
 						+ " mts sqr already Exists");
 			}
