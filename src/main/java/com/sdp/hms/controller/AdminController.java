@@ -131,8 +131,8 @@ public class AdminController {
 			@RequestPart("image") Optional<MultipartFile> file) {
 		try {
 			RoomCategory roomCategory = categoryRepository.findById(id).get();
-			roomCategory.setImageData(new byte[0]);
 			if (file.isPresent()) {
+				roomCategory.setImageData(new byte[0]);
 				fields.get().put("imageData", ImageUtil.compressImage(file.get().getBytes()));
 			}
 			return categoryService.updateSpecificCategory(roomCategory, fields);
