@@ -133,7 +133,7 @@ public class AdminController {
 			RoomCategory roomCategory = categoryRepository.findById(id).get();
 			if (file.isPresent()) {
 				roomCategory.setImageData(new byte[0]);
-				fields.get().put("imageData", ImageUtil.compressImage(file.get().getBytes()));
+				fields.get().put("imageData", file.get().getBytes());
 			}
 			return categoryService.updateSpecificCategory(roomCategory, fields);
 		} catch (Exception e) {
