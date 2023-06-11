@@ -33,6 +33,12 @@ public class Guests {
 		this.id = id;
 		this.name = name;
 	}
+	
+	public Guests(String name) {
+		super();
+		this.name = name;
+	}
+
 
 	public Long getId() {
 		return id;

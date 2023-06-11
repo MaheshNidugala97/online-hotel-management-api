@@ -193,6 +193,7 @@ public class AdminController {
 		RoomCategory roomCategory = null;
 		try {
 			rooms = roomRepository.findById(id).get();
+			rooms.setImageData(new byte[0]);
 			roomCategory = categoryRepository.findById(categoryId).get();
 			roomService.updateRoom(rooms, roomdto, roomCategory, file);
 			return ResponseEntity.status(HttpStatus.OK).body("Room with id " + id + " successfully updated");
@@ -225,7 +226,8 @@ public class AdminController {
 				fields.get().put("category", roomCategory);
 			}
 			if (file.isPresent()) {
-				fields.get().put("imageData", ImageUtil.compressImage(file.get().getBytes()));
+				rooms.setImageData(new byte[0]);
+				fields.get().put("imageData", file.get().getBytes());
 			}
 			return roomService.updateSpecificRooms(rooms, fields);
 

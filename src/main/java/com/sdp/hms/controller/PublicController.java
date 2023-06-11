@@ -1,8 +1,12 @@
 package com.sdp.hms.controller;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,13 +17,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.sdp.hms.dao.CategoryRepository;
+import com.sdp.hms.dao.GuestRepository;
 import com.sdp.hms.dao.ParkingRepository;
 import com.sdp.hms.dao.RoomRepository;
+import com.sdp.hms.dto.BookingDto;
 import com.sdp.hms.entity.Parking;
 import com.sdp.hms.entity.RoomCategory;
 import com.sdp.hms.entity.Rooms;
+import com.sdp.hms.exception.ApiRequestException;
 import com.sdp.hms.exception.InternalServerException;
 import com.sdp.hms.exception.NotFoundException;
+import com.sdp.hms.service.BookingService;
+import com.sdp.hms.service.RoomService;
 
 /**
  * 
@@ -40,6 +49,15 @@ public class PublicController {
 
 	@Autowired
 	private ParkingRepository parkingRepository;
+
+	@Autowired
+	private GuestRepository guestRepository;
+
+	@Autowired
+	private BookingService bookingService;
+	
+	@Autowired
+	private RoomService roomService;
 
 	@GetMapping("category")
 	public List<RoomCategory> getAllCategory() {
@@ -87,9 +105,16 @@ public class PublicController {
 	}
 
 	@GetMapping("rooms")
-	public List<Rooms> getAllRooms(@RequestParam(defaultValue = "true") Boolean isActive) {
+	public List<Rooms> getAllRooms(@RequestParam Optional<Boolean> isActive) {
 		try {
-			return roomRepository.findByIsActive(isActive);
+			if(isActive.isPresent()) {
+			
+			return roomRepository.findByIsActive(isActive.get());
+			}
+			else
+			{
+				return  roomRepository.findAll();
+			}
 		} catch (Exception e) {
 			if (e.getMessage() == "No value present") {
 				throw new NotFoundException(e.getMessage());
@@ -142,12 +167,12 @@ public class PublicController {
 	public List<Rooms> getRoomsByCategory(@RequestParam(defaultValue = "true") Boolean isActive,
 			@PathVariable String title) {
 		try {
-			List<Rooms> listOfRooms=roomRepository.findByCategory(title, isActive);
+			List<Rooms> listOfRooms = roomRepository.findByCategory(title, isActive);
 			if (listOfRooms.isEmpty()) {
-				throw new NotFoundException("Rooms not found for category "+ title );
+				throw new NotFoundException("Rooms not found for category " + title);
 			}
 			return listOfRooms;
-				
+
 		} catch (Exception e) {
 			if (e.getMessage() == "No value present") {
 				throw new NotFoundException(e.getMessage());
@@ -182,10 +207,10 @@ public class PublicController {
 	}
 
 	@GetMapping("parking/vehicletype/{vehicletype}")
-	public Parking getParkingByType(@PathVariable String vehicletype) {
+	public List<Parking> getParkingByType(@PathVariable String vehicletype) {
 		try {
-			Parking parking = parkingRepository.findByVehicleType(vehicletype);
-			if (parking == null) {
+			List<Parking> parking = parkingRepository.findByVehicleType(vehicletype);
+			if (parking.isEmpty()) {
 				throw new NotFoundException("Parking with vehicle type " + vehicletype + " not found");
 			}
 			return parking;
@@ -203,18 +228,31 @@ public class PublicController {
 
 	}
 
-//	@PostMapping(value = "booking/room")
-//	public ResponseEntity<?> bookRoom(@RequestBody String roomNumbers) {
-//		try {
-//
-//			categoryService.addCategory(categoryDto, file);
-//			return ResponseEntity.status(HttpStatus.OK).body(categoryDto.getTitle() + " successfully added");
-//		} catch (ApiRequestException e) {
-//			throw new ApiRequestException(e.getMessage());
-//		} catch (Exception e) {
-//			throw new InternalServerException("Internal Server Error");
-//		}
-//
-//	}
+	@PostMapping(value = "booking/book")
+	public ResponseEntity<?> bookRoom(@RequestBody BookingDto bookingDto) {
+		try {
+			bookingService.bookRoom(bookingDto);
+			return ResponseEntity.status(HttpStatus.OK).body("Guests successfully added");
+		} catch (ApiRequestException e) {
+			throw new ApiRequestException(e.getMessage());
+		} catch (Exception e) {
+			throw new InternalServerException(e.getMessage());
+		}
+
+	}
+
+	@GetMapping(value = "room/estimated/price")
+	public Map<String, Double> getEstimatedPrice(@RequestParam String roomNumbers, @RequestParam String arrivalDate,
+			@RequestParam String deptDate, @RequestParam Boolean isActive) {
+		try {			 
+			double estimatedRoomPrice=roomService.getEstimatedPrice(roomNumbers, arrivalDate, deptDate, isActive);
+			return Collections.singletonMap("estimatedPrice", estimatedRoomPrice);
+		} catch (ApiRequestException e) {
+			throw new ApiRequestException(e.getMessage());
+		} catch (Exception e) {
+			throw new InternalServerException(e.getMessage());
+		}
+
+	}
 
 }
