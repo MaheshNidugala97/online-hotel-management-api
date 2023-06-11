@@ -32,7 +32,7 @@ public class SecurityConfig {
 
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-		http.csrf().disable().cors().and().exceptionHandling()
+		http.csrf().disable().cors().and().headers().httpStrictTransportSecurity().disable().and().exceptionHandling()
 				.authenticationEntryPoint(authEntryPoint).and().sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().authorizeHttpRequests()
 				.requestMatchers("/hms/auth/signin", "/hms/auth/signup", "/hms/auth/me").permitAll()

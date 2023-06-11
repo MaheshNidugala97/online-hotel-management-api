@@ -1,6 +1,7 @@
 package com.sdp.hms.entity;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -10,8 +11,9 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 /**
@@ -29,7 +31,7 @@ public class Booking {
 	private Long id;
 
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	@JoinColumn(name = "guests")
+	@JoinColumn(name = "booking_id")
 	private List<Guests> guests;
 
 	@Column(name = "arrival_date", nullable = false)
@@ -41,13 +43,11 @@ public class Booking {
 	@Column(name = "number_of_guests", nullable = false)
 	private Integer numberOfGuests;
 
-	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	@JoinColumn(name = "rooms")
-	private List<Rooms> rooms;
-
-	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	@JoinColumn(name = "parking")
-	private Parking parking;
+	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@JoinTable(name = "guest_parkings", joinColumns = {
+			@JoinColumn(name = "booking_id", referencedColumnName = "id") }, inverseJoinColumns = {
+					@JoinColumn(name = "parking_id", referencedColumnName = "id") })
+	private List<Parking> parking = new ArrayList<>();
 
 	@Column(nullable = false)
 	private Double amount;
@@ -61,14 +61,13 @@ public class Booking {
 	}
 
 	public Booking(Long id, List<Guests> guests, LocalDateTime arrivalDate, LocalDateTime departureDate,
-			Integer numberOfGuests, List<Rooms> rooms, Parking parking, Double amount, String paymentType) {
+			Integer numberOfGuests, List<Parking> parking, Double amount, String paymentType) {
 		super();
 		this.id = id;
 		this.guests = guests;
 		this.arrivalDate = arrivalDate;
 		this.departureDate = departureDate;
 		this.numberOfGuests = numberOfGuests;
-		this.rooms = rooms;
 		this.parking = parking;
 		this.amount = amount;
 		this.paymentType = paymentType;
@@ -114,19 +113,11 @@ public class Booking {
 		this.numberOfGuests = numberOfGuests;
 	}
 
-	public List<Rooms> getRooms() {
-		return rooms;
-	}
-
-	public void setRooms(List<Rooms> rooms) {
-		this.rooms = rooms;
-	}
-
-	public Parking getParking() {
+	public List<Parking> getParking() {
 		return parking;
 	}
 
-	public void setParking(Parking parking) {
+	public void setParking(List<Parking> parking) {
 		this.parking = parking;
 	}
 
@@ -144,6 +135,13 @@ public class Booking {
 
 	public void setPaymentType(String paymentType) {
 		this.paymentType = paymentType;
+	}
+
+	@Override
+	public String toString() {
+		return "Booking [id=" + id + ", guests=" + guests + ", arrivalDate=" + arrivalDate + ", departureDate="
+				+ departureDate + ", numberOfGuests=" + numberOfGuests + ", parking=" + parking + ", amount=" + amount
+				+ ", paymentType=" + paymentType + "]";
 	}
 
 }
