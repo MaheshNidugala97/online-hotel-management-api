@@ -54,7 +54,8 @@ public class BookingService {
 
 	public void bookRoom(BookingDto bookingDto, String roomNumbers) {
 		try {
-			double finalPrice = Double.valueOf((String) bookingDto.getTotalCost());
+			double finalPrice = 0.0;
+			double roomPrice = Double.valueOf((String) bookingDto.getEstimatedCost());
 			double parkingPrice = 0.0;
 			Booking booking = new Booking();
 			List<Guests> guests = saveGuests(bookingDto.getGuests());
@@ -76,11 +77,13 @@ public class BookingService {
 				List<Parking> parking = parkingRepository.findByListOfVehicleType(listOfParkings);
 				long numberOfDays = roomService.calculateDays(bookingDto.getArrivalDate(),
 						bookingDto.getDepartureDate());
-				finalPrice = finalPrice + parkingPrice * numberOfDays;
+				finalPrice = roomPrice + parkingPrice * numberOfDays;
 				booking.setParking(parking);
+				booking.setParkingCost(parkingPrice * numberOfDays);
 			} else {
 				booking.setParking(null);
 			}
+			booking.setRoomCost(roomPrice);
 			booking.setEmail(bookingDto.getEmail());
 			booking.setGuests(guests);
 			booking.setRooms(rooms);
@@ -112,24 +115,52 @@ public class BookingService {
 				Field field = ReflectionUtils.findField(Booking.class, (String) key);
 				field.setAccessible(true);
 				ReflectionUtils.setField(field, booking, value);
-				
 			});
 			return bookingRepository.save(booking);
 		}
 		return null;
 	}
 
-	public void updateSpecificGuests(List<Guests> guest, Optional<Map<Object, Object>> fields) {
-		if (guest != null) {
-			fields.get().forEach((key, value) -> {
-				Field field = ReflectionUtils.findField(Guests.class, (String) key);
-				field.setAccessible(true);
-				ReflectionUtils.setField(field, guest, value);
-				
-			});
-			 guestRepository.saveAll(guest);
-		}
-		
-	}
+//	public void updateBookings(Booking booking, List<Guests> listOfGuest, String roomNumbers, BookingDto bookingDto) {
+//		double finalPrice = Double.valueOf((String) bookingDto.getTotalCost());
+//		double parkingPrice = 0.0;
+//		booking.setEmail(bookingDto.getEmail());
+//		List<Guests> guests = new ArrayList<>();
+//		listOfGuest.stream().forEach((guest) -> {
+//
+//			guests.add(new Guests(guest.getName()));
+//
+//		});
+//		List<Guests> listOfGuests = guestRepository.saveAll(guests);
+//		List<Integer> listRoomNumbers = new ArrayList<>();
+//		String[] arrayRoomNumbers = roomNumbers.split(",");
+//		for (String roomNumber : arrayRoomNumbers) {
+//			Integer roomNo = Integer.parseInt(roomNumber);
+//			listRoomNumbers.add(roomNo);
+//		}
+//		List<Rooms> rooms = roomRepository.findByRoomNumbers(listRoomNumbers);
+//		booking.setGuests(guests);
+//		booking.setRooms(rooms);
+//		booking.setGuests(listOfGuests);
+//		booking.setArrivalDate(LocalDateTime.parse(bookingDto.getArrivalDate() + " " + checkInTime, formatter));
+//		booking.setDepartureDate(LocalDateTime.parse(bookingDto.getArrivalDate() + " " + checkOutTime, formatter));
+//		booking.setNumberOfGuests(bookingDto.getNumberOfGuests());
+//		List<String> listOfParkings = new ArrayList<>();
+//		for (NumberOfParkingDto aa : bookingDto.getParkingList().get()) {
+//			double vehicleCost = parkingRepository.getVehicleCost(aa.getVehicleType());
+//			Integer no = aa.getNumberOfVehicles();
+//			parkingPrice = parkingPrice + vehicleCost * no;
+//			listOfParkings.add(aa.getVehicleType());
+//		}
+//		List<Parking> parking = parkingRepository.findByListOfVehicleType(listOfParkings);
+//		long numberOfDays = roomService.calculateDays(bookingDto.getArrivalDate(), bookingDto.getDepartureDate());
+//		finalPrice = finalPrice + parkingPrice * numberOfDays;
+//		booking.setParking(parking);
+//		booking.setTotalCost(finalPrice);
+//		booking.setPaymentType(bookingDto.getPaymentType());
+//		bookingRepository.save(booking);
+//		roomRepository.updateRoomsToInactive(listRoomNumbers);
+//
+//	}
 
 }

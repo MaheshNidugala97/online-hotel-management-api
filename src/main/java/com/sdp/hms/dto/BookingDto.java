@@ -2,7 +2,6 @@ package com.sdp.hms.dto;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 /**
  * 
@@ -22,7 +21,7 @@ public class BookingDto {
 
 	private Integer numberOfGuests;
 
-	private String totalCost;
+	private String estimatedCost;
 
 	private Optional<List<NumberOfParkingDto>> parkingList;
 
@@ -34,7 +33,7 @@ public class BookingDto {
 	}
 
 	public BookingDto(List<GuestsDto> guests, String email, String arrivalDate, String departureDate,
-			Integer numberOfGuests, String totalCost, Optional<List<NumberOfParkingDto>> parkingList,
+			Integer numberOfGuests, String estimatedCost, Optional<List<NumberOfParkingDto>> parkingList,
 			String paymentType) {
 		super();
 		this.guests = guests;
@@ -42,7 +41,7 @@ public class BookingDto {
 		this.arrivalDate = arrivalDate;
 		this.departureDate = departureDate;
 		this.numberOfGuests = numberOfGuests;
-		this.totalCost = totalCost;
+		this.estimatedCost = estimatedCost;
 		this.parkingList = parkingList;
 		this.paymentType = paymentType;
 	}
@@ -53,6 +52,14 @@ public class BookingDto {
 
 	public void setGuests(List<GuestsDto> guests) {
 		this.guests = guests;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	public String getArrivalDate() {
@@ -79,12 +86,12 @@ public class BookingDto {
 		this.numberOfGuests = numberOfGuests;
 	}
 
-	public String getTotalCost() {
-		return totalCost;
+	public String getEstimatedCost() {
+		return estimatedCost;
 	}
 
-	public void setTotalCost(String totalCost) {
-		this.totalCost = totalCost;
+	public void setEstimatedCost(String estimatedCost) {
+		this.estimatedCost = estimatedCost;
 	}
 
 	public Optional<List<NumberOfParkingDto>> getParkingList() {
@@ -103,19 +110,11 @@ public class BookingDto {
 		this.paymentType = paymentType;
 	}
 
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
 	@Override
 	public String toString() {
 		return "BookingDto [guests=" + guests + ", email=" + email + ", arrivalDate=" + arrivalDate + ", departureDate="
-				+ departureDate + ", numberOfGuests=" + numberOfGuests + ", totalCost=" + totalCost + ", parkingList="
-				+ parkingList + ", paymentType=" + paymentType + "]";
+				+ departureDate + ", numberOfGuests=" + numberOfGuests + ", estimatedCost=" + estimatedCost
+				+ ", parkingList=" + parkingList + ", paymentType=" + paymentType + "]";
 	}
 
 }

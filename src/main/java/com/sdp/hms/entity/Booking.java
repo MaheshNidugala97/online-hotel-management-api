@@ -59,6 +59,12 @@ public class Booking {
 	@Column(name = "total_cost", nullable = false)
 	private Double totalCost;
 
+	@Column(name = "room_cost", nullable = false)
+	private Double roomCost;
+
+	@Column(name = "parking_cost", nullable = false)
+	private Double parkingCost;
+
 	@Column(name = "payment_type", nullable = false)
 	private String paymentType;
 
@@ -68,7 +74,8 @@ public class Booking {
 	}
 
 	public Booking(Long id, String email, List<Guests> guests, LocalDateTime arrivalDate, LocalDateTime departureDate,
-			List<Rooms> rooms, Integer numberOfGuests, List<Parking> parking, Double totalCost, String paymentType) {
+			List<Rooms> rooms, Integer numberOfGuests, List<Parking> parking, Double totalCost, Double roomCost,
+			Double parkingCost, String paymentType) {
 		super();
 		this.id = id;
 		this.email = email;
@@ -79,6 +86,8 @@ public class Booking {
 		this.numberOfGuests = numberOfGuests;
 		this.parking = parking;
 		this.totalCost = totalCost;
+		this.roomCost = roomCost;
+		this.parkingCost = parkingCost;
 		this.paymentType = paymentType;
 	}
 
@@ -88,6 +97,14 @@ public class Booking {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	public List<Guests> getGuests() {
@@ -146,6 +163,22 @@ public class Booking {
 		this.totalCost = totalCost;
 	}
 
+	public Double getRoomCost() {
+		return roomCost;
+	}
+
+	public void setRoomCost(Double roomCost) {
+		this.roomCost = roomCost;
+	}
+
+	public Double getParkingCost() {
+		return parkingCost;
+	}
+
+	public void setParkingCost(Double parkingCost) {
+		this.parkingCost = parkingCost;
+	}
+
 	public String getPaymentType() {
 		return paymentType;
 	}
@@ -154,19 +187,12 @@ public class Booking {
 		this.paymentType = paymentType;
 	}
 
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
 	@Override
 	public String toString() {
 		return "Booking [id=" + id + ", email=" + email + ", guests=" + guests + ", arrivalDate=" + arrivalDate
 				+ ", departureDate=" + departureDate + ", rooms=" + rooms + ", numberOfGuests=" + numberOfGuests
-				+ ", parking=" + parking + ", totalCost=" + totalCost + ", paymentType=" + paymentType + "]";
+				+ ", parking=" + parking + ", totalCost=" + totalCost + ", roomCost=" + roomCost + ", parkingCost="
+				+ parkingCost + ", paymentType=" + paymentType + "]";
 	}
 
 }
