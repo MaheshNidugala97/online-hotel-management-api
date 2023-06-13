@@ -7,8 +7,6 @@ public class BookingUpdateDto {
 
 	private Optional<List<NumberOfParkingDto>> parkingList;
 
-	private String estimatedCost;
-
 	private String arrivalDate;
 
 	private String departureDate;
@@ -18,11 +16,9 @@ public class BookingUpdateDto {
 		// TODO Auto-generated constructor stub
 	}
 
-	public BookingUpdateDto(Optional<List<NumberOfParkingDto>> parkingList, String estimatedCost, String arrivalDate,
-			String departureDate) {
+	public BookingUpdateDto(Optional<List<NumberOfParkingDto>> parkingList, String arrivalDate, String departureDate) {
 		super();
 		this.parkingList = parkingList;
-		this.estimatedCost = estimatedCost;
 		this.arrivalDate = arrivalDate;
 		this.departureDate = departureDate;
 	}
@@ -33,14 +29,6 @@ public class BookingUpdateDto {
 
 	public void setParkingList(Optional<List<NumberOfParkingDto>> parkingList) {
 		this.parkingList = parkingList;
-	}
-
-	public String getEstimatedCost() {
-		return estimatedCost;
-	}
-
-	public void setEstimatedCost(String estimatedCost) {
-		this.estimatedCost = estimatedCost;
 	}
 
 	public String getArrivalDate() {
@@ -61,8 +49,8 @@ public class BookingUpdateDto {
 
 	@Override
 	public String toString() {
-		return "BookingUpdateDto [parkingList=" + parkingList + ", estimatedCost=" + estimatedCost + ", arrivalDate="
-				+ arrivalDate + ", departureDate=" + departureDate + "]";
+		return "BookingUpdateDto [parkingList=" + parkingList + ", arrivalDate=" + arrivalDate + ", departureDate="
+				+ departureDate + "]";
 	}
 
 }

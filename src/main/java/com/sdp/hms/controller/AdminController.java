@@ -393,11 +393,12 @@ public class AdminController {
 	
 	
 	@PatchMapping(value = "bookings/update/id/{id}")
-	public Booking updateBookings(@PathVariable Long id,@RequestBody BookingUpdateDto bookingUpdateDto) {
+	public Booking updateBookings(@PathVariable Long id,@RequestParam String roomNumbers,@RequestBody BookingUpdateDto bookingUpdateDto) {
 		try {
 			Booking booking = bookingRepository.findById(id).get();
 			double finalPrice=0.0;
-			double roomPrice = Double.valueOf((String) bookingUpdateDto.getEstimatedCost());
+			double roomPrice = roomService.getEstimatedPrice(roomNumbers, bookingUpdateDto.getArrivalDate(),
+					bookingUpdateDto.getDepartureDate(), false);
 			double parkingPrice = 0.0;
 			List<String> listOfParkings = new ArrayList<>();
 			long numberOfDays = roomService.calculateDays(bookingUpdateDto.getArrivalDate(),
