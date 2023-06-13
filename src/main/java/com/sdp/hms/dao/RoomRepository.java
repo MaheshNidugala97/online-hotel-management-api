@@ -37,5 +37,8 @@ public interface RoomRepository extends JpaRepository<Rooms, Long> {
 	@Modifying
 	@Query("UPDATE Rooms r SET r.isActive=false where r.roomNo IN (:roomNumbers)")
 	public void updateRoomsToInactive(List<Integer> roomNumbers);
+
+	@Query(value="SELECT * from rooms r where r.booking_id=?1", nativeQuery = true)
+	List<Rooms> findByBookingId(Long id);
 	
 }

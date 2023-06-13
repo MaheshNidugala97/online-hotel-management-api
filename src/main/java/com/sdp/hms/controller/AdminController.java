@@ -1,6 +1,7 @@
 package com.sdp.hms.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -27,11 +28,12 @@ import com.sdp.hms.dao.CategoryRepository;
 import com.sdp.hms.dao.GuestRepository;
 import com.sdp.hms.dao.ParkingRepository;
 import com.sdp.hms.dao.RoomRepository;
+import com.sdp.hms.dto.BookingUpdateDto;
 import com.sdp.hms.dto.CategoryDto;
+import com.sdp.hms.dto.NumberOfParkingDto;
 import com.sdp.hms.dto.ParkingDto;
 import com.sdp.hms.dto.RoomDto;
 import com.sdp.hms.entity.Booking;
-import com.sdp.hms.entity.Guests;
 import com.sdp.hms.entity.Parking;
 import com.sdp.hms.entity.RoomCategory;
 import com.sdp.hms.entity.Rooms;
@@ -74,13 +76,13 @@ public class AdminController {
 
 	@Autowired
 	private BookingRepository bookingRepository;
-	
+
 	@Autowired
 	private BookingService bookingService;
 
 	@Autowired
 	private GuestRepository guestRepository;
-	
+
 	ObjectMapper objectMapper = new ObjectMapper();
 
 	@PostMapping(value = "category/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -369,15 +371,14 @@ public class AdminController {
 			}
 		}
 	}
-	
-//	@PatchMapping(value = "bookings/update/id/{id}")
-//	public Booking updateSpecificBookings(@PathVariable Long id, @RequestBody Optional<Map<Object, Object>> fields) {
+
+//	@PutMapping(value = "bookings/update/id/{id}")
+//	public Object updateBookings(@PathVariable Long id,@RequestParam String roomNumbers, @RequestBody BookingDto bookingDto) {
 //		try {
 //			Booking booking = bookingRepository.findById(id).get();
-////			List<Guests> guest=guestRepository.findByBookingId(id);
-////			fields.get().put("guests", guest);
-//
-//			return bookingService.updateSpecificBookings(booking, fields);
+//			List<Guests> listOfGuest=guestRepository.findByBookingId(id);
+//			bookingService.updateBookings(booking,listOfGuest,roomNumbers, bookingDto);
+//			return ResponseEntity.status(HttpStatus.OK).body("Parking with id " + id + " successfully updated");
 //		} catch (Exception e) {
 //			if (e.getMessage() == "No value present") {
 //				throw new NotFoundException(e.getMessage() + " for parking with id " + id);
@@ -388,6 +389,44 @@ public class AdminController {
 //		}
 //
 //	}
+	
+	
+	
+	@PatchMapping(value = "bookings/update/id/{id}")
+	public Booking updateBookings(@PathVariable Long id,@RequestBody BookingUpdateDto bookingUpdateDto) {
+		try {
+			Booking booking = bookingRepository.findById(id).get();
+			double finalPrice=0.0;
+			double roomPrice = Double.valueOf((String) bookingUpdateDto.getEstimatedCost());
+			double parkingPrice = 0.0;
+			List<String> listOfParkings = new ArrayList<>();
+			long numberOfDays = roomService.calculateDays(bookingUpdateDto.getArrivalDate(),
+					bookingUpdateDto.getDepartureDate());
+			for (NumberOfParkingDto aa : bookingUpdateDto.getParkingList().get()) {
+				double vehicleCost = parkingRepository.getVehicleCost(aa.getVehicleType());
+				Integer no = aa.getNumberOfVehicles();
+				parkingPrice = parkingPrice + vehicleCost * no;
+				listOfParkings.add(aa.getVehicleType());
+			}
+			finalPrice = roomPrice + parkingPrice * numberOfDays;
+			List<Parking> parking = parkingRepository.findByListOfVehicleType(listOfParkings);
+			booking.setParking(parking);
+			booking.setParkingCost(parkingPrice * numberOfDays);
+			booking.setTotalCost(finalPrice);
+			return bookingRepository.save(booking);
+
+		} catch (Exception e) {
+			if (e.getMessage() == "No value present") {
+				throw new NotFoundException(e.getMessage() + " for parking with id " + id);
+
+			} else {
+				throw new InternalServerException(e);
+			}
+		}
+
+	}
+	
+
 	
 
 }

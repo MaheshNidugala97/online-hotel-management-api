@@ -53,7 +53,6 @@ public class AuthenticationController {
 
 	private JwtGenerator jwtGenerator;
 
-
 	public AuthenticationController(UserRepository userRepository, RoleRepository roleRepository,
 			AuthenticationManager authenticationManager, PasswordEncoder passwordEncoder, JwtGenerator jwtGenerator) {
 		this.userRepository = userRepository;
@@ -64,7 +63,7 @@ public class AuthenticationController {
 	}
 
 	@PostMapping("signin")
-	public ResponseEntity<AuthResponseDto> verifyUser(@RequestBody  LoginDto loginDto ) {
+	public ResponseEntity<AuthResponseDto> verifyUser(@RequestBody LoginDto loginDto) {
 		try {
 
 			Authentication authentication = authenticationManager
@@ -123,7 +122,7 @@ public class AuthenticationController {
 			String role = jwtGenerator.getRoleFromJWT(token);
 			return new ResponseEntity<>(new MyDetailsResponseDto(email, role), HttpStatus.OK);
 
-		}  catch (Exception e) {
+		} catch (Exception e) {
 			throw new AccessDeniedException("Wrong credientials");
 		}
 

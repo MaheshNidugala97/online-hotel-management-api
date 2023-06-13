@@ -21,4 +21,5 @@ public interface ParkingRepository extends JpaRepository<Parking, Long> {
 	@Query("SELECT p.price from Parking p where p.vehicleType=?1")
 	double getVehicleCost(String vehicleType);
 
+
 }
