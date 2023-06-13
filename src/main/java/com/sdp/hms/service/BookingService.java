@@ -7,11 +7,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ReflectionUtils;
-
 import com.sdp.hms.dao.BookingRepository;
 import com.sdp.hms.dao.GuestRepository;
 import com.sdp.hms.dao.ParkingRepository;
@@ -32,6 +32,9 @@ import com.sdp.hms.entity.Rooms;
 
 @Service
 public class BookingService {
+
+	@Value("${online.get.estimated.cost.endpoint}")
+	private String estimatedCostEndpoint;
 
 	@Autowired
 	private GuestRepository guestRepository;
@@ -55,7 +58,8 @@ public class BookingService {
 	public void bookRoom(BookingDto bookingDto, String roomNumbers) {
 		try {
 			double finalPrice = 0.0;
-			double roomPrice = Double.valueOf((String) bookingDto.getEstimatedCost());
+			double roomPrice = roomService.getEstimatedPrice(roomNumbers, bookingDto.getArrivalDate(),
+					bookingDto.getDepartureDate(), true);
 			double parkingPrice = 0.0;
 			Booking booking = new Booking();
 			List<Guests> guests = saveGuests(bookingDto.getGuests());

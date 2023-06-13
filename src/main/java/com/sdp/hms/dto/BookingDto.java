@@ -21,8 +21,6 @@ public class BookingDto {
 
 	private Integer numberOfGuests;
 
-	private String estimatedCost;
-
 	private Optional<List<NumberOfParkingDto>> parkingList;
 
 	private String paymentType;
@@ -33,15 +31,13 @@ public class BookingDto {
 	}
 
 	public BookingDto(List<GuestsDto> guests, String email, String arrivalDate, String departureDate,
-			Integer numberOfGuests, String estimatedCost, Optional<List<NumberOfParkingDto>> parkingList,
-			String paymentType) {
+			Integer numberOfGuests, Optional<List<NumberOfParkingDto>> parkingList, String paymentType) {
 		super();
 		this.guests = guests;
 		this.email = email;
 		this.arrivalDate = arrivalDate;
 		this.departureDate = departureDate;
 		this.numberOfGuests = numberOfGuests;
-		this.estimatedCost = estimatedCost;
 		this.parkingList = parkingList;
 		this.paymentType = paymentType;
 	}
@@ -86,14 +82,6 @@ public class BookingDto {
 		this.numberOfGuests = numberOfGuests;
 	}
 
-	public String getEstimatedCost() {
-		return estimatedCost;
-	}
-
-	public void setEstimatedCost(String estimatedCost) {
-		this.estimatedCost = estimatedCost;
-	}
-
 	public Optional<List<NumberOfParkingDto>> getParkingList() {
 		return parkingList;
 	}
@@ -113,8 +101,8 @@ public class BookingDto {
 	@Override
 	public String toString() {
 		return "BookingDto [guests=" + guests + ", email=" + email + ", arrivalDate=" + arrivalDate + ", departureDate="
-				+ departureDate + ", numberOfGuests=" + numberOfGuests + ", estimatedCost=" + estimatedCost
-				+ ", parkingList=" + parkingList + ", paymentType=" + paymentType + "]";
+				+ departureDate + ", numberOfGuests=" + numberOfGuests + ", parkingList=" + parkingList
+				+ ", paymentType=" + paymentType + "]";
 	}
 
 }
