@@ -33,9 +33,6 @@ import com.sdp.hms.entity.Rooms;
 @Service
 public class BookingService {
 
-	@Value("${online.get.estimated.cost.endpoint}")
-	private String estimatedCostEndpoint;
-
 	@Autowired
 	private GuestRepository guestRepository;
 
