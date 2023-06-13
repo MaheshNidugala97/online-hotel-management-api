@@ -1,6 +1,8 @@
 package com.sdp.hms.dto;
-	
+
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 /**
  * 
@@ -12,13 +14,17 @@ public class BookingDto {
 
 	private List<GuestsDto> guests;
 
+	private String email;
+
 	private String arrivalDate;
 
 	private String departureDate;
 
 	private Integer numberOfGuests;
 
-	private String parkingType;
+	private String totalCost;
+
+	private Optional<List<NumberOfParkingDto>> parkingList;
 
 	private String paymentType;
 
@@ -27,14 +33,17 @@ public class BookingDto {
 		// TODO Auto-generated constructor stub
 	}
 
-	public BookingDto(List<GuestsDto> guests, String arrivalDate, String departureDate,
-			Integer numberOfGuests, String parkingType, String paymentType) {
+	public BookingDto(List<GuestsDto> guests, String email, String arrivalDate, String departureDate,
+			Integer numberOfGuests, String totalCost, Optional<List<NumberOfParkingDto>> parkingList,
+			String paymentType) {
 		super();
 		this.guests = guests;
+		this.email = email;
 		this.arrivalDate = arrivalDate;
 		this.departureDate = departureDate;
 		this.numberOfGuests = numberOfGuests;
-		this.parkingType = parkingType;
+		this.totalCost = totalCost;
+		this.parkingList = parkingList;
 		this.paymentType = paymentType;
 	}
 
@@ -70,12 +79,20 @@ public class BookingDto {
 		this.numberOfGuests = numberOfGuests;
 	}
 
-	public String getParkingType() {
-		return parkingType;
+	public String getTotalCost() {
+		return totalCost;
 	}
 
-	public void setParkingType(String parkingType) {
-		this.parkingType = parkingType;
+	public void setTotalCost(String totalCost) {
+		this.totalCost = totalCost;
+	}
+
+	public Optional<List<NumberOfParkingDto>> getParkingList() {
+		return parkingList;
+	}
+
+	public void setParkingList(Optional<List<NumberOfParkingDto>> parkingList) {
+		this.parkingList = parkingList;
 	}
 
 	public String getPaymentType() {
@@ -86,11 +103,19 @@ public class BookingDto {
 		this.paymentType = paymentType;
 	}
 
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
 	@Override
 	public String toString() {
-		return "BookingDto [guests=" + guests + ", arrivalDate=" + arrivalDate + ", departureDate=" + departureDate
-				+ ", numberOfGuests=" + numberOfGuests + ", parkingType=" + parkingType + ", paymentType=" + paymentType
-				+ "]";
+		return "BookingDto [guests=" + guests + ", email=" + email + ", arrivalDate=" + arrivalDate + ", departureDate="
+				+ departureDate + ", numberOfGuests=" + numberOfGuests + ", totalCost=" + totalCost + ", parkingList="
+				+ parkingList + ", paymentType=" + paymentType + "]";
 	}
 
 }

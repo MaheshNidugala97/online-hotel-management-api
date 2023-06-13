@@ -2,6 +2,7 @@ package com.sdp.hms.dao;
 
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import com.sdp.hms.entity.Rooms;
@@ -29,4 +30,12 @@ public interface RoomRepository extends JpaRepository<Rooms, Long> {
 	
 	@Query("SELECT r from Rooms r where r.roomNo IN (:roomNumbers) and r.isActive=:isActive")
 	List<Rooms> findByAllRoomNo( List<Integer> roomNumbers, Boolean isActive);
+	
+	@Query("SELECT r from Rooms r where r.roomNo IN (:roomNumbers)")
+	List<Rooms> findByRoomNumbers( List<Integer> roomNumbers);
+	
+	@Modifying
+	@Query("UPDATE Rooms r SET r.isActive=false where r.roomNo IN (:roomNumbers)")
+	public void updateRoomsToInactive(List<Integer> roomNumbers);
+	
 }

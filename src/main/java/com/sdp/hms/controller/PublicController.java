@@ -16,11 +16,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.sdp.hms.dao.BookingRepository;
 import com.sdp.hms.dao.CategoryRepository;
 import com.sdp.hms.dao.GuestRepository;
 import com.sdp.hms.dao.ParkingRepository;
 import com.sdp.hms.dao.RoomRepository;
 import com.sdp.hms.dto.BookingDto;
+import com.sdp.hms.dto.EmailDto;
+import com.sdp.hms.entity.Booking;
 import com.sdp.hms.entity.Parking;
 import com.sdp.hms.entity.RoomCategory;
 import com.sdp.hms.entity.Rooms;
@@ -55,9 +59,12 @@ public class PublicController {
 
 	@Autowired
 	private BookingService bookingService;
-	
+
 	@Autowired
 	private RoomService roomService;
+
+	@Autowired
+	private BookingRepository bookingRepository;
 
 	@GetMapping("category")
 	public List<RoomCategory> getAllCategory() {
@@ -107,13 +114,11 @@ public class PublicController {
 	@GetMapping("rooms")
 	public List<Rooms> getAllRooms(@RequestParam Optional<Boolean> isActive) {
 		try {
-			if(isActive.isPresent()) {
-			
-			return roomRepository.findByIsActive(isActive.get());
-			}
-			else
-			{
-				return  roomRepository.findAll();
+			if (isActive.isPresent()) {
+
+				return roomRepository.findByIsActive(isActive.get());
+			} else {
+				return roomRepository.findAll();
 			}
 		} catch (Exception e) {
 			if (e.getMessage() == "No value present") {
@@ -229,10 +234,11 @@ public class PublicController {
 	}
 
 	@PostMapping(value = "booking/book")
-	public ResponseEntity<?> bookRoom(@RequestBody BookingDto bookingDto) {
+	public ResponseEntity<?> bookRoom(@RequestBody BookingDto bookingDto, @RequestParam String roomNumbers) {
 		try {
-			bookingService.bookRoom(bookingDto);
-			return ResponseEntity.status(HttpStatus.OK).body("Guests successfully added");
+			bookingService.bookRoom(bookingDto, roomNumbers);
+			return ResponseEntity.status(HttpStatus.OK).body("You have successfully booked rooms " + roomNumbers
+					+ " for date " + bookingDto.getArrivalDate() + " to " + bookingDto.getDepartureDate());
 		} catch (ApiRequestException e) {
 			throw new ApiRequestException(e.getMessage());
 		} catch (Exception e) {
@@ -241,11 +247,26 @@ public class PublicController {
 
 	}
 
+	@PostMapping("user/bookings")
+	public Booking getBookingsByEmail(@RequestBody EmailDto emailDto) {
+		try {
+			return bookingRepository.findByEmail(emailDto.getEmail());
+		} catch (Exception e) {
+			if (e.getMessage() == "No value present") {
+				throw new NotFoundException(e.getMessage() + " for room with email id " + (emailDto.getEmail()));
+
+			} else {
+				throw new InternalServerException(e.getMessage());
+			}
+		}
+
+	}
+
 	@GetMapping(value = "room/estimated/price")
 	public Map<String, Double> getEstimatedPrice(@RequestParam String roomNumbers, @RequestParam String arrivalDate,
 			@RequestParam String deptDate, @RequestParam Boolean isActive) {
-		try {			 
-			double estimatedRoomPrice=roomService.getEstimatedPrice(roomNumbers, arrivalDate, deptDate, isActive);
+		try {
+			double estimatedRoomPrice = roomService.getEstimatedPrice(roomNumbers, arrivalDate, deptDate, isActive);
 			return Collections.singletonMap("estimatedPrice", estimatedRoomPrice);
 		} catch (ApiRequestException e) {
 			throw new ApiRequestException(e.getMessage());

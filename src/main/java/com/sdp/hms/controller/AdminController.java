@@ -1,6 +1,7 @@
 package com.sdp.hms.controller;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,23 +22,26 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sdp.hms.dao.BookingRepository;
 import com.sdp.hms.dao.CategoryRepository;
+import com.sdp.hms.dao.GuestRepository;
 import com.sdp.hms.dao.ParkingRepository;
 import com.sdp.hms.dao.RoomRepository;
 import com.sdp.hms.dto.CategoryDto;
 import com.sdp.hms.dto.ParkingDto;
 import com.sdp.hms.dto.RoomDto;
+import com.sdp.hms.entity.Booking;
+import com.sdp.hms.entity.Guests;
 import com.sdp.hms.entity.Parking;
 import com.sdp.hms.entity.RoomCategory;
 import com.sdp.hms.entity.Rooms;
 import com.sdp.hms.exception.ApiRequestException;
 import com.sdp.hms.exception.InternalServerException;
 import com.sdp.hms.exception.NotFoundException;
+import com.sdp.hms.service.BookingService;
 import com.sdp.hms.service.CategoryService;
 import com.sdp.hms.service.ParkingService;
 import com.sdp.hms.service.RoomService;
-import com.sdp.hms.util.ImageUtil;
-
 
 /**
  * 
@@ -67,6 +72,15 @@ public class AdminController {
 	@Autowired
 	private ParkingRepository parkingRepository;
 
+	@Autowired
+	private BookingRepository bookingRepository;
+	
+	@Autowired
+	private BookingService bookingService;
+
+	@Autowired
+	private GuestRepository guestRepository;
+	
 	ObjectMapper objectMapper = new ObjectMapper();
 
 	@PostMapping(value = "category/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -79,7 +93,6 @@ public class AdminController {
 			}
 			categoryService.addCategory(categoryDto, file);
 //			Base64.getEncoder().encodeToString();
-
 			return ResponseEntity.status(HttpStatus.OK).body(categoryDto.getTitle() + " successfully added");
 		} catch (ApiRequestException e) {
 			throw new ApiRequestException(e.getMessage());
@@ -294,11 +307,9 @@ public class AdminController {
 		}
 
 	}
-	
-	
+
 	@PatchMapping(value = "parking/update/id/{id}")
-	public Parking updateSpecificParking(@PathVariable Long id,
-			@RequestBody Optional<Map<String, Object>> fields) {
+	public Parking updateSpecificParking(@PathVariable Long id, @RequestBody Optional<Map<String, Object>> fields) {
 		try {
 			Parking parking = parkingRepository.findById(id).get();
 			return parkingService.updateSpecificParking(parking, fields);
@@ -312,8 +323,71 @@ public class AdminController {
 		}
 
 	}
+
+	@GetMapping("category/id/{id}")
+	public RoomCategory getCategoryById(@PathVariable Long id) {
+		try {
+			return categoryRepository.findById(id).get();
+		} catch (Exception e) {
+			if (e.getMessage() == "No value present") {
+				throw new NotFoundException(e.getMessage() + " for category with id " + id);
+
+			} else {
+				throw new InternalServerException(e.getMessage());
+			}
+		}
+
+	}
+
+	@GetMapping("bookings")
+	public List<Booking> getCategoryById() {
+		try {
+			return bookingRepository.findAll();
+		} catch (Exception e) {
+			if (e.getMessage() == "No value present") {
+				throw new NotFoundException("No bookings found");
+
+			} else {
+				throw new InternalServerException(e.getMessage());
+			}
+		}
+
+	}
+
+	@DeleteMapping("booking/delete/id/{id}")
+	public ResponseEntity<?> deleteBooking(@PathVariable Long id) {
+		try {
+			bookingRepository.findById(id).get();
+			bookingRepository.deleteById(id);
+			return ResponseEntity.status(HttpStatus.OK).body("Booking with id " + id + " successfully deleted");
+		} catch (Exception e) {
+			if (e.getMessage() == "No value present") {
+				throw new NotFoundException(e.getMessage() + " for bookng with id " + id);
+
+			} else {
+				throw new InternalServerException(e.getMessage());
+			}
+		}
+	}
 	
-	
+//	@PatchMapping(value = "bookings/update/id/{id}")
+//	public Booking updateSpecificBookings(@PathVariable Long id, @RequestBody Optional<Map<Object, Object>> fields) {
+//		try {
+//			Booking booking = bookingRepository.findById(id).get();
+////			List<Guests> guest=guestRepository.findByBookingId(id);
+////			fields.get().put("guests", guest);
+//
+//			return bookingService.updateSpecificBookings(booking, fields);
+//		} catch (Exception e) {
+//			if (e.getMessage() == "No value present") {
+//				throw new NotFoundException(e.getMessage() + " for parking with id " + id);
+//
+//			} else {
+//				throw new InternalServerException(e);
+//			}
+//		}
+//
+//	}
 	
 
 }

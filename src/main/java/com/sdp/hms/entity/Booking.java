@@ -30,7 +30,10 @@ public class Booking {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@Column(name = "email", nullable = false)
+	private String email;
+
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
 	@JoinColumn(name = "booking_id")
 	private List<Guests> guests;
 
@@ -40,17 +43,21 @@ public class Booking {
 	@Column(name = "departure_date", nullable = false)
 	private LocalDateTime departureDate;
 
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@JoinColumn(name = "room_id")
+	private List<Rooms> rooms;
+
 	@Column(name = "number_of_guests", nullable = false)
 	private Integer numberOfGuests;
 
-	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
 	@JoinTable(name = "guest_parkings", joinColumns = {
 			@JoinColumn(name = "booking_id", referencedColumnName = "id") }, inverseJoinColumns = {
 					@JoinColumn(name = "parking_id", referencedColumnName = "id") })
 	private List<Parking> parking = new ArrayList<>();
 
-	@Column(nullable = false)
-	private Double amount;
+	@Column(name = "total_cost", nullable = false)
+	private Double totalCost;
 
 	@Column(name = "payment_type", nullable = false)
 	private String paymentType;
@@ -60,16 +67,18 @@ public class Booking {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Booking(Long id, List<Guests> guests, LocalDateTime arrivalDate, LocalDateTime departureDate,
-			Integer numberOfGuests, List<Parking> parking, Double amount, String paymentType) {
+	public Booking(Long id, String email, List<Guests> guests, LocalDateTime arrivalDate, LocalDateTime departureDate,
+			List<Rooms> rooms, Integer numberOfGuests, List<Parking> parking, Double totalCost, String paymentType) {
 		super();
 		this.id = id;
+		this.email = email;
 		this.guests = guests;
 		this.arrivalDate = arrivalDate;
 		this.departureDate = departureDate;
+		this.rooms = rooms;
 		this.numberOfGuests = numberOfGuests;
 		this.parking = parking;
-		this.amount = amount;
+		this.totalCost = totalCost;
 		this.paymentType = paymentType;
 	}
 
@@ -105,6 +114,14 @@ public class Booking {
 		this.departureDate = departureDate;
 	}
 
+	public List<Rooms> getRooms() {
+		return rooms;
+	}
+
+	public void setRooms(List<Rooms> rooms) {
+		this.rooms = rooms;
+	}
+
 	public Integer getNumberOfGuests() {
 		return numberOfGuests;
 	}
@@ -121,12 +138,12 @@ public class Booking {
 		this.parking = parking;
 	}
 
-	public Double getAmount() {
-		return amount;
+	public Double getTotalCost() {
+		return totalCost;
 	}
 
-	public void setAmount(Double amount) {
-		this.amount = amount;
+	public void setTotalCost(Double totalCost) {
+		this.totalCost = totalCost;
 	}
 
 	public String getPaymentType() {
@@ -137,11 +154,19 @@ public class Booking {
 		this.paymentType = paymentType;
 	}
 
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
 	@Override
 	public String toString() {
-		return "Booking [id=" + id + ", guests=" + guests + ", arrivalDate=" + arrivalDate + ", departureDate="
-				+ departureDate + ", numberOfGuests=" + numberOfGuests + ", parking=" + parking + ", amount=" + amount
-				+ ", paymentType=" + paymentType + "]";
+		return "Booking [id=" + id + ", email=" + email + ", guests=" + guests + ", arrivalDate=" + arrivalDate
+				+ ", departureDate=" + departureDate + ", rooms=" + rooms + ", numberOfGuests=" + numberOfGuests
+				+ ", parking=" + parking + ", totalCost=" + totalCost + ", paymentType=" + paymentType + "]";
 	}
 
 }
