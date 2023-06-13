@@ -15,8 +15,6 @@ import com.sdp.hms.dao.RoomRepository;
 import com.sdp.hms.dto.RoomDto;
 import com.sdp.hms.entity.RoomCategory;
 import com.sdp.hms.entity.Rooms;
-import com.sdp.hms.util.ImageUtil;
-
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;

@@ -30,7 +30,7 @@ public class Rooms {
 	@Column(name = "room_no")
 	private Integer roomNo;
 
-	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
 	@JoinColumn(name = "category")
 	private RoomCategory category;
 

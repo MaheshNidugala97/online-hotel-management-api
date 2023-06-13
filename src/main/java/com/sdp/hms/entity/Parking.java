@@ -32,6 +32,11 @@ public class Parking {
 		// TODO Auto-generated constructor stub
 	}
 
+	public Parking(String vehicleType) {
+		super();
+		this.vehicleType = vehicleType;
+	}
+
 	public Parking(Long id, String vehicleType, Double price) {
 		super();
 		this.id = id;
