@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -312,12 +313,11 @@ public class PublicController {
 	}
 
 	@GetMapping(value = "max/guests/category/id/{id}")
-	public Map<String, Integer> getMaxGuests( @PathVariable Long id,
-			@RequestParam Optional<Boolean> isActive) {
+	public Map<String, Integer> getMaxGuests(@PathVariable Long id, @RequestParam Optional<Boolean> isActive) {
 		try {
 			Integer roomCount = roomRepository.findRoomCount(id, isActive.get());
-			Integer maxPeopleAllowedInRoom= categoryRepository.getMaxPeopleAllowed(id);
-			Integer maxGuestAllowed= roomCount*maxPeopleAllowedInRoom;
+			Integer maxPeopleAllowedInRoom = categoryRepository.getMaxPeopleAllowed(id);
+			Integer maxGuestAllowed = roomCount * maxPeopleAllowedInRoom;
 			return Collections.singletonMap("maxGuestAllowed", maxGuestAllowed);
 		} catch (ApiRequestException e) {
 			throw new ApiRequestException(e.getMessage());
@@ -325,6 +325,22 @@ public class PublicController {
 			throw new InternalServerException(e.getMessage());
 		}
 
+	}
+
+	@DeleteMapping("booking/delete/id/{id}")
+	public ResponseEntity<?> deleteBooking(@PathVariable Long id) {
+		try {
+			bookingRepository.findById(id).get();
+			bookingRepository.deleteById(id);
+			return ResponseEntity.status(HttpStatus.OK).body("Booking with id " + id + " successfully deleted");
+		} catch (Exception e) {
+			if (e.getMessage() == "No value present") {
+				throw new NotFoundException(e.getMessage() + " for bookng with id " + id);
+
+			} else {
+				throw new InternalServerException(e.getMessage());
+			}
+		}
 	}
 
 }

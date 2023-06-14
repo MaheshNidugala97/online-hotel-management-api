@@ -28,6 +28,7 @@ import com.sdp.hms.dao.CategoryRepository;
 import com.sdp.hms.dao.GuestRepository;
 import com.sdp.hms.dao.ParkingRepository;
 import com.sdp.hms.dao.RoomRepository;
+import com.sdp.hms.dao.TransactionRepository;
 import com.sdp.hms.dto.BookingUpdateDto;
 import com.sdp.hms.dto.CategoryDto;
 import com.sdp.hms.dto.CheckoutDto;
@@ -38,6 +39,7 @@ import com.sdp.hms.entity.Booking;
 import com.sdp.hms.entity.Parking;
 import com.sdp.hms.entity.RoomCategory;
 import com.sdp.hms.entity.Rooms;
+import com.sdp.hms.entity.Transaction;
 import com.sdp.hms.exception.ApiRequestException;
 import com.sdp.hms.exception.InternalServerException;
 import com.sdp.hms.exception.NotFoundException;
@@ -87,6 +89,9 @@ public class AdminController {
 
 	@Autowired
 	private TransactionService transactionService;
+
+	@Autowired
+	private TransactionRepository transactionRepository;
 
 	ObjectMapper objectMapper = new ObjectMapper();
 
@@ -361,22 +366,6 @@ public class AdminController {
 
 	}
 
-	@DeleteMapping("booking/delete/id/{id}")
-	public ResponseEntity<?> deleteBooking(@PathVariable Long id) {
-		try {
-			bookingRepository.findById(id).get();
-			bookingRepository.deleteById(id);
-			return ResponseEntity.status(HttpStatus.OK).body("Booking with id " + id + " successfully deleted");
-		} catch (Exception e) {
-			if (e.getMessage() == "No value present") {
-				throw new NotFoundException(e.getMessage() + " for bookng with id " + id);
-
-			} else {
-				throw new InternalServerException(e.getMessage());
-			}
-		}
-	}
-
 	@PatchMapping(value = "bookings/update/id/{id}")
 	public Booking updateBookings(@PathVariable Long id, @RequestParam String roomNumbers,
 			@RequestBody BookingUpdateDto bookingUpdateDto) {
@@ -416,11 +405,23 @@ public class AdminController {
 	@PostMapping(value = "checkout")
 	public ResponseEntity<?> checkout(@RequestParam String roomNumbers, @RequestBody CheckoutDto checkoutDto) {
 		try {
-			transactionService.checkout(roomNumbers,checkoutDto);
+			transactionService.checkout(roomNumbers, checkoutDto);
 			return ResponseEntity.status(HttpStatus.OK)
-					.body("Transaction details saved sucessfully for booking id " + checkoutDto.getBookingId());
+					.body("Successfully checked out room numbers " + roomNumbers);
 		} catch (Exception e) {
 			throw new InternalServerException(e);
+
+		}
+
+	}
+
+	@GetMapping("transactions")
+	public List<Transaction> getAllTransactions() {
+		try {
+			return transactionRepository.findAll();
+		} catch (Exception e) {
+
+			throw new InternalServerException(e.getMessage());
 
 		}
 
