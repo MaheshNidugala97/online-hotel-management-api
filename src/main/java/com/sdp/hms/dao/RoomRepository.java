@@ -1,5 +1,6 @@
 package com.sdp.hms.dao;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -28,6 +29,7 @@ public interface RoomRepository extends JpaRepository<Rooms, Long> {
 	@Query("SELECT r,c from Rooms r join RoomCategory c on r.category=c.id where c.title=?1 and r.isActive=?2")
 	List<Rooms> findByCategory(String title, Boolean isActive);
 	
+	
 	@Query("SELECT r from Rooms r where r.roomNo IN (:roomNumbers) and r.isActive=:isActive")
 	List<Rooms> findByAllRoomNo( List<Integer> roomNumbers, Boolean isActive);
 	
@@ -37,8 +39,22 @@ public interface RoomRepository extends JpaRepository<Rooms, Long> {
 	@Modifying
 	@Query("UPDATE Rooms r SET r.isActive=false where r.roomNo IN (:roomNumbers)")
 	public void updateRoomsToInactive(List<Integer> roomNumbers);
+	
+	@Modifying
+	@Query("UPDATE Rooms r SET r.isActive=true where r.roomNo IN (:roomNumbers)")
+	public void updateRoomsToActive(List<Integer> roomNumbers);
 
 	@Query(value="SELECT * from rooms r where r.booking_id=?1", nativeQuery = true)
 	List<Rooms> findByBookingId(Long id);
+	
+	@Query(value="SELECT count(r.room_no) from rooms r where r.category=?1 and r.active=?2", nativeQuery = true)
+	Integer findRoomCount(Long id, Boolean isActive);
+
+	@Modifying
+	@Query("UPDATE Rooms r SET r.arrivalDate=:arrivalDate, r.deptDate=:deptDate where r.roomNo IN (:roomNumbers)")
+	void updateRoomDates(LocalDateTime arrivalDate, LocalDateTime deptDate, List<Integer> roomNumbers);
+
+	@Query("SELECT r from Rooms r where r.arrivalDate>?2 or r.deptDate<?1 or r.arrivalDate is null or r.deptDate is null")
+	List<Rooms> findByDates(LocalDateTime arrivalDateOfNewCustomer, LocalDateTime deptDateOfNewCustomer);
 	
 }

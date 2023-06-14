@@ -30,6 +30,7 @@ import com.sdp.hms.dao.ParkingRepository;
 import com.sdp.hms.dao.RoomRepository;
 import com.sdp.hms.dto.BookingUpdateDto;
 import com.sdp.hms.dto.CategoryDto;
+import com.sdp.hms.dto.CheckoutDto;
 import com.sdp.hms.dto.NumberOfParkingDto;
 import com.sdp.hms.dto.ParkingDto;
 import com.sdp.hms.dto.RoomDto;
@@ -44,6 +45,7 @@ import com.sdp.hms.service.BookingService;
 import com.sdp.hms.service.CategoryService;
 import com.sdp.hms.service.ParkingService;
 import com.sdp.hms.service.RoomService;
+import com.sdp.hms.service.TransactionService;
 
 /**
  * 
@@ -82,6 +84,9 @@ public class AdminController {
 
 	@Autowired
 	private GuestRepository guestRepository;
+
+	@Autowired
+	private TransactionService transactionService;
 
 	ObjectMapper objectMapper = new ObjectMapper();
 
@@ -372,31 +377,12 @@ public class AdminController {
 		}
 	}
 
-//	@PutMapping(value = "bookings/update/id/{id}")
-//	public Object updateBookings(@PathVariable Long id,@RequestParam String roomNumbers, @RequestBody BookingDto bookingDto) {
-//		try {
-//			Booking booking = bookingRepository.findById(id).get();
-//			List<Guests> listOfGuest=guestRepository.findByBookingId(id);
-//			bookingService.updateBookings(booking,listOfGuest,roomNumbers, bookingDto);
-//			return ResponseEntity.status(HttpStatus.OK).body("Parking with id " + id + " successfully updated");
-//		} catch (Exception e) {
-//			if (e.getMessage() == "No value present") {
-//				throw new NotFoundException(e.getMessage() + " for parking with id " + id);
-//
-//			} else {
-//				throw new InternalServerException(e);
-//			}
-//		}
-//
-//	}
-	
-	
-	
 	@PatchMapping(value = "bookings/update/id/{id}")
-	public Booking updateBookings(@PathVariable Long id,@RequestParam String roomNumbers,@RequestBody BookingUpdateDto bookingUpdateDto) {
+	public Booking updateBookings(@PathVariable Long id, @RequestParam String roomNumbers,
+			@RequestBody BookingUpdateDto bookingUpdateDto) {
 		try {
 			Booking booking = bookingRepository.findById(id).get();
-			double finalPrice=0.0;
+			double finalPrice = 0.0;
 			double roomPrice = roomService.getEstimatedPrice(roomNumbers, bookingUpdateDto.getArrivalDate(),
 					bookingUpdateDto.getDepartureDate(), false);
 			double parkingPrice = 0.0;
@@ -426,8 +412,18 @@ public class AdminController {
 		}
 
 	}
-	
 
-	
+	@PostMapping(value = "checkout")
+	public ResponseEntity<?> checkout(@RequestParam String roomNumbers, @RequestBody CheckoutDto checkoutDto) {
+		try {
+			transactionService.checkout(roomNumbers,checkoutDto);
+			return ResponseEntity.status(HttpStatus.OK)
+					.body("Transaction details saved sucessfully for booking id " + checkoutDto.getBookingId());
+		} catch (Exception e) {
+			throw new InternalServerException(e);
+
+		}
+
+	}
 
 }

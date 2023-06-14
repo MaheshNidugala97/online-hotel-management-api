@@ -10,8 +10,6 @@ public class CategoryDto {
 
 	private String title;
 
-	private Integer rooms;
-
 	private String size;
 
 	private String price;
@@ -23,10 +21,9 @@ public class CategoryDto {
 		// TODO Auto-generated constructor stub
 	}
 
-	public CategoryDto(String title, Integer rooms, String size, String price, Integer maxPeopleAllowed) {
+	public CategoryDto(String title, String size, String price, Integer maxPeopleAllowed) {
 		super();
 		this.title = title;
-		this.rooms = rooms;
 		this.size = size;
 		this.price = price;
 		this.maxPeopleAllowed = maxPeopleAllowed;
@@ -38,14 +35,6 @@ public class CategoryDto {
 
 	public void setTitle(String title) {
 		this.title = title;
-	}
-
-	public Integer getRooms() {
-		return rooms;
-	}
-
-	public void setRooms(Integer rooms) {
-		this.rooms = rooms;
 	}
 
 	public String getSize() {
@@ -74,9 +63,8 @@ public class CategoryDto {
 
 	@Override
 	public String toString() {
-		return "CategoryDto [title=" + title + ", rooms=" + rooms + ", size=" + size + ", price=" + price
-				+ ", maxPeopleAllowed=" + maxPeopleAllowed + "]";
+		return "CategoryDto [title=" + title + ", size=" + size + ", price=" + price + ", maxPeopleAllowed="
+				+ maxPeopleAllowed + "]";
 	}
-
 
 }
