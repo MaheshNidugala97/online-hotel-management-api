@@ -22,5 +22,6 @@ public interface GuestRepository extends JpaRepository<Guests, Long> {
 	@Modifying
 	@Query(value="UPDATE guests g SET g.name=?1 where g.booking_id=?2", nativeQuery = true)
 	public void updateGuestNames(String name, Long id);
+	
 
 }
