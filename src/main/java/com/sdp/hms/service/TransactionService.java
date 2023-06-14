@@ -51,6 +51,7 @@ public class TransactionService {
 		transaction.setFinalCost(checkoutDto.getFinalCost());
 		transactionRepository.save(transaction);
 		bookingRepository.deleteById(checkoutDto.getBookingId());
+		roomRepository.updateRoomDates(null, null, listRoomNumbers);
 
 	}
 
