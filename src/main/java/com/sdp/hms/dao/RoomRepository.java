@@ -45,8 +45,8 @@ public interface RoomRepository extends JpaRepository<Rooms, Long> {
 	@Query(value = "SELECT * from rooms r where r.booking_id=?1", nativeQuery = true)
 	List<Rooms> findByBookingId(Long id);
 
-	@Query(value = "SELECT count(r.room_no) from rooms r where (r.category=?1 and r.active=true) and (r.arrival_date>?3 or r.departure_date<?2 or r.arrival_date is null or r.departure_date is null) ", nativeQuery = true)
-	Integer findRoomCount(Long id, LocalDateTime arrivalDateOfNewCustomer, LocalDateTime deptDateOfNewCustomer);
+	@Query(value = "SELECT count(r.room_no) from rooms r where r.category=?1 and r.active=true ", nativeQuery = true)
+	Integer findRoomCount(Long id);
 
 	@Modifying
 	@Query("UPDATE Rooms r SET r.arrivalDate=:arrivalDate, r.deptDate=:deptDate where r.roomNo IN (:roomNumbers)")
@@ -55,4 +55,7 @@ public interface RoomRepository extends JpaRepository<Rooms, Long> {
 	@Query("SELECT r from Rooms r where (r.arrivalDate>?2 or r.deptDate<?1 or r.arrivalDate is null or r.deptDate is null) and r.isActive=true")
 	List<Rooms> findByDates(LocalDateTime arrivalDateOfNewCustomer, LocalDateTime deptDateOfNewCustomer);
 
+	@Query(value = "SELECT count(r.room_no) from rooms r where (r.category=?1 and r.active=true) and (r.arrival_date>?3 or r.departure_date<?2 or r.arrival_date is null or r.departure_date is null) ", nativeQuery = true)
+	Integer findRoomCountByDates(Long id, LocalDateTime arrivalDateOfNewCustomer, LocalDateTime deptDateOfNewCustomer);
+	
 }

@@ -300,13 +300,9 @@ public class PublicController {
 	}
 
 	@GetMapping(value = "room/count")
-	public Map<String, Integer> getRoomCount(@RequestParam String arrivalDate, @RequestParam String deptDate,
-			@RequestParam Long categoryId) {
+	public Map<String, Integer> getRoomCount(@RequestParam Long categoryId) {
 		try {
-			LocalDateTime deptDateOfNewCustomer = LocalDateTime.parse(deptDate + " " + checkOutTime, formatter);
-			LocalDateTime arrivalDateOfNewCustomer = LocalDateTime.parse(arrivalDate + " " + checkInTime, formatter);
-			Integer roomCount = roomRepository.findRoomCount(categoryId, arrivalDateOfNewCustomer,
-					deptDateOfNewCustomer);
+			Integer roomCount = roomRepository.findRoomCount(categoryId);
 			return Collections.singletonMap("totalRoomCount", roomCount);
 		} catch (ApiRequestException e) {
 			throw new ApiRequestException(e.getMessage());
@@ -316,14 +312,21 @@ public class PublicController {
 
 	}
 
-	@GetMapping(value = "max/guests/category/id/{id}")
-	public Map<String, Integer> getMaxGuests(@PathVariable Long id, @RequestParam String arrivalDate,
-			@RequestParam String deptDate) {
+	@GetMapping(value = "max/guests")
+	public Map<String, Integer> getMaxGuests(@RequestParam String arrivalDate, @RequestParam String deptDate) {
 		try {
 			LocalDateTime deptDateOfNewCustomer = LocalDateTime.parse(deptDate + " " + checkOutTime, formatter);
 			LocalDateTime arrivalDateOfNewCustomer = LocalDateTime.parse(arrivalDate + " " + checkInTime, formatter);
-			Integer roomCount = roomRepository.findRoomCount(id, arrivalDateOfNewCustomer, deptDateOfNewCustomer);
-			Integer maxPeopleAllowedInRoom = categoryRepository.getMaxPeopleAllowed(id);
+			List<RoomCategory> roomCategories = categoryRepository.findAll();
+			Integer roomCount = 0;
+			Integer maxPeopleAllowedInRoom = 0;
+			for (RoomCategory roomCategory : roomCategories) {
+				roomCount = roomCount + roomRepository.findRoomCountByDates(roomCategory.getId(),
+						arrivalDateOfNewCustomer, deptDateOfNewCustomer);
+				maxPeopleAllowedInRoom = maxPeopleAllowedInRoom
+						+ categoryRepository.getMaxPeopleAllowed(roomCategory.getId());
+			}
+
 			Integer maxGuestAllowed = roomCount * maxPeopleAllowedInRoom;
 			return Collections.singletonMap("maxGuestAllowed", maxGuestAllowed);
 		} catch (ApiRequestException e) {
@@ -340,8 +343,7 @@ public class PublicController {
 			Booking booking = bookingRepository.findById(id).get();
 			bookingRepository.deleteById(id);
 			List<Integer> listOfRoomNumbers = new ArrayList<>();
-			for (Rooms room : booking.getRooms())
-			{
+			for (Rooms room : booking.getRooms()) {
 				listOfRoomNumbers.add(room.getRoomNo());
 			}
 			roomRepository.updateRoomDates(null, null, listOfRoomNumbers);
