@@ -8,8 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ReflectionUtils;
 import com.sdp.hms.dao.BookingRepository;
@@ -53,52 +51,51 @@ public class BookingService {
 	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
 	public void bookRoom(BookingDto bookingDto, String roomNumbers) {
-		try {
-			double finalPrice = 0.0;
-			double roomPrice = roomService.getEstimatedPrice(roomNumbers, bookingDto.getArrivalDate(),
-					bookingDto.getDepartureDate(), true);
-			double parkingPrice = 0.0;
-			Booking booking = new Booking();
-			List<Guests> guests = saveGuests(bookingDto.getGuests());
-			List<Integer> listRoomNumbers = new ArrayList<>();
-			String[] arrayRoomNumbers = roomNumbers.split(",");
-			for (String roomNumber : arrayRoomNumbers) {
-				Integer roomNo = Integer.parseInt(roomNumber);
-				listRoomNumbers.add(roomNo);
-			}
-			List<Rooms> rooms = roomRepository.findByRoomNumbers(listRoomNumbers);
-			List<String> listOfParkings = new ArrayList<>();
-			if (bookingDto.getParkingList().isPresent()) {
-				for (NumberOfParkingDto aa : bookingDto.getParkingList().get()) {
-					double vehicleCost = parkingRepository.getVehicleCost(aa.getVehicleType());
-					Integer no = aa.getNumberOfVehicles();
-					parkingPrice = parkingPrice + vehicleCost * no;
-					listOfParkings.add(aa.getVehicleType());
-				}
-				List<Parking> parking = parkingRepository.findByListOfVehicleType(listOfParkings);
-				long numberOfDays = roomService.calculateDays(bookingDto.getArrivalDate(),
-						bookingDto.getDepartureDate());
-				finalPrice = roomPrice + parkingPrice * numberOfDays;
-				booking.setParking(parking);
-				booking.setParkingCost(parkingPrice * numberOfDays);
-			} else {
-				booking.setParking(null);
-			}
-			booking.setRoomCost(roomPrice);
-			booking.setEmail(bookingDto.getEmail());
-			booking.setGuests(guests);
-			booking.setRooms(rooms);
-			booking.setArrivalDate(LocalDateTime.parse(bookingDto.getArrivalDate() + " " + checkInTime, formatter));
-			booking.setDepartureDate(LocalDateTime.parse(bookingDto.getArrivalDate() + " " + checkOutTime, formatter));
-			booking.setNumberOfGuests(bookingDto.getNumberOfGuests());
-			booking.setTotalCost(finalPrice);
-			booking.setPaymentType(bookingDto.getPaymentType());
-			bookingRepository.save(booking);
-			roomRepository.updateRoomsToInactive(listRoomNumbers);
-
-		} catch (Exception e) {
-			throw e;
+		LocalDateTime deptDateOfNewCustomer = LocalDateTime.parse(bookingDto.getDepartureDate() + " " + checkInTime,
+				formatter);
+		LocalDateTime arrivalDateOfNewCustomer = LocalDateTime.parse(bookingDto.getArrivalDate() + " " + checkOutTime,
+				formatter);
+		double finalPrice = 0.0;
+		double roomPrice = roomService.getEstimatedPrice(roomNumbers, bookingDto.getArrivalDate(),
+				bookingDto.getDepartureDate(), true);
+		double parkingPrice = 0.0;
+		Booking booking = new Booking();
+		List<Guests> guests = saveGuests(bookingDto.getGuests());
+		List<Integer> listRoomNumbers = new ArrayList<>();
+		String[] arrayRoomNumbers = roomNumbers.split(",");
+		for (String roomNumber : arrayRoomNumbers) {
+			Integer roomNo = Integer.parseInt(roomNumber);
+			listRoomNumbers.add(roomNo);
 		}
+		List<Rooms> rooms = roomRepository.findByRoomNumbers(listRoomNumbers);
+		List<String> listOfParkings = new ArrayList<>();
+		if (bookingDto.getParkingList().isPresent()) {
+			for (NumberOfParkingDto aa : bookingDto.getParkingList().get()) {
+				double vehicleCost = parkingRepository.getVehicleCost(aa.getVehicleType());
+				Integer no = aa.getNumberOfVehicles();
+				parkingPrice = parkingPrice + vehicleCost * no;
+				listOfParkings.add(aa.getVehicleType());
+			}
+			List<Parking> parking = parkingRepository.findByListOfVehicleType(listOfParkings);
+			long numberOfDays = roomService.calculateDays(bookingDto.getArrivalDate(), bookingDto.getDepartureDate());
+			finalPrice = roomPrice + parkingPrice * numberOfDays;
+			booking.setParking(parking);
+			booking.setParkingCost(parkingPrice * numberOfDays);
+		} else {
+			booking.setParking(null);
+		}
+		booking.setRoomCost(roomPrice);
+		booking.setEmail(bookingDto.getEmail());
+		booking.setGuests(guests);
+		booking.setRooms(rooms);
+		booking.setArrivalDate(arrivalDateOfNewCustomer);
+		booking.setDepartureDate(deptDateOfNewCustomer);
+		booking.setNumberOfGuests(bookingDto.getNumberOfGuests());
+		booking.setTotalCost(finalPrice);
+		booking.setPaymentType(bookingDto.getPaymentType());
+		bookingRepository.save(booking);
+		roomRepository.updateRoomDates(arrivalDateOfNewCustomer, deptDateOfNewCustomer, listRoomNumbers);
+
 	}
 
 	public List<Guests> saveGuests(List<GuestsDto> guestsDto) {

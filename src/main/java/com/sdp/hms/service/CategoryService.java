@@ -28,7 +28,6 @@ public class CategoryService  {
 	public void addCategory(CategoryDto categoryDto, MultipartFile file) throws IOException {
 		RoomCategory roomCategory = new RoomCategory();
 		roomCategory.setTitle(categoryDto.getTitle());
-		roomCategory.setRooms(categoryDto.getRooms());
 		roomCategory.setSize(Double.valueOf(categoryDto.getSize()));
 		roomCategory.setPrice(Double.valueOf(categoryDto.getPrice()));
 		roomCategory.setMaxPeopleAllowed(categoryDto.getMaxPeopleAllowed());
@@ -39,7 +38,6 @@ public class CategoryService  {
 	public void updateCategory(RoomCategory roomCategory, CategoryDto categoryDto, MultipartFile file)
 			throws IOException {
 		roomCategory.setTitle(categoryDto.getTitle());
-		roomCategory.setRooms(categoryDto.getRooms());
 		roomCategory.setSize(Double.valueOf(categoryDto.getSize()));
 		roomCategory.setPrice(Double.valueOf(categoryDto.getPrice()));
 		roomCategory.setMaxPeopleAllowed(categoryDto.getMaxPeopleAllowed());

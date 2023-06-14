@@ -1,5 +1,6 @@
 package com.sdp.hms.entity;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 
 import jakarta.persistence.CascadeType;
@@ -46,13 +47,19 @@ public class Rooms {
 	@Column(name = "imagedata", length = 1000)
 	private byte[] imageData;
 
+	@Column(name = "arrival_date")
+	private LocalDateTime arrivalDate;
+
+	@Column(name = "departure_date")
+	private LocalDateTime deptDate;
+
 	public Rooms() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
 	public Rooms(Long id, Integer roomNo, RoomCategory category, Boolean isActive, Boolean isInventoryAvailable,
-			Boolean isCleaned, byte[] imageData) {
+			Boolean isCleaned, byte[] imageData, LocalDateTime arrivalDate, LocalDateTime deptDate) {
 		super();
 		this.id = id;
 		this.roomNo = roomNo;
@@ -61,6 +68,8 @@ public class Rooms {
 		this.isInventoryAvailable = isInventoryAvailable;
 		this.isCleaned = isCleaned;
 		this.imageData = imageData;
+		this.arrivalDate = arrivalDate;
+		this.deptDate = deptDate;
 	}
 
 	public Long getId() {
@@ -119,11 +128,27 @@ public class Rooms {
 		this.imageData = imageData;
 	}
 
+	public LocalDateTime getArrivalDate() {
+		return arrivalDate;
+	}
+
+	public void setArrivalDate(LocalDateTime arrivalDate) {
+		this.arrivalDate = arrivalDate;
+	}
+
+	public LocalDateTime getDeptDate() {
+		return deptDate;
+	}
+
+	public void setDeptDate(LocalDateTime deptDate) {
+		this.deptDate = deptDate;
+	}
+
 	@Override
 	public String toString() {
 		return "Rooms [id=" + id + ", roomNo=" + roomNo + ", category=" + category + ", isActive=" + isActive
 				+ ", isInventoryAvailable=" + isInventoryAvailable + ", isCleaned=" + isCleaned + ", imageData="
-				+ Arrays.toString(imageData) + "]";
+				+ Arrays.toString(imageData) + ", arrivalDate=" + arrivalDate + ", deptDate=" + deptDate + "]";
 	}
 
 }

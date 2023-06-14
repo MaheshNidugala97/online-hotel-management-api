@@ -27,9 +27,6 @@ public class RoomCategory {
 	private String title;
 
 	@Column(nullable = false)
-	private Integer rooms;
-
-	@Column(nullable = false)
 	private Double size;
 
 	@Column(nullable = false)
@@ -37,8 +34,8 @@ public class RoomCategory {
 
 	@Column(name = "max_people_allowed")
 	private Integer maxPeopleAllowed;
-	
-	@Column(name="image_data", length=1000)
+
+	@Column(name = "image_data", length = 1000)
 	private byte[] imageData;
 
 	public RoomCategory() {
@@ -46,12 +43,10 @@ public class RoomCategory {
 		// TODO Auto-generated constructor stub
 	}
 
-	public RoomCategory(Long id, String title, Integer rooms, Double size, Double price, Integer maxPeopleAllowed,
-			byte[] imageData) {
+	public RoomCategory(Long id, String title, Double size, Double price, Integer maxPeopleAllowed, byte[] imageData) {
 		super();
 		this.id = id;
 		this.title = title;
-		this.rooms = rooms;
 		this.size = size;
 		this.price = price;
 		this.maxPeopleAllowed = maxPeopleAllowed;
@@ -72,14 +67,6 @@ public class RoomCategory {
 
 	public void setTitle(String title) {
 		this.title = title;
-	}
-
-	public Integer getRooms() {
-		return rooms;
-	}
-
-	public void setRooms(Integer rooms) {
-		this.rooms = rooms;
 	}
 
 	public Double getSize() {
@@ -116,9 +103,8 @@ public class RoomCategory {
 
 	@Override
 	public String toString() {
-		return "RoomCategory [id=" + id + ", title=" + title + ", rooms=" + rooms + ", size=" + size + ", price="
-				+ price + ", maxPeopleAllowed=" + maxPeopleAllowed + ", imageData=" + Arrays.toString(imageData) + "]";
+		return "RoomCategory [id=" + id + ", title=" + title + ", size=" + size + ", price=" + price
+				+ ", maxPeopleAllowed=" + maxPeopleAllowed + ", imageData=" + Arrays.toString(imageData) + "]";
 	}
 
-	
 }

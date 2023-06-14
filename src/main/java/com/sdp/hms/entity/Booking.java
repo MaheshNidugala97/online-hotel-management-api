@@ -44,7 +44,7 @@ public class Booking {
 	private LocalDateTime departureDate;
 
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
-	@JoinColumn(name = "room_id")
+	@JoinColumn(name = "booking_id" , referencedColumnName = "id")
 	private List<Rooms> rooms;
 
 	@Column(name = "number_of_guests", nullable = false)

@@ -1,5 +1,7 @@
 package com.sdp.hms.controller;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -33,9 +35,6 @@ import com.sdp.hms.exception.NotFoundException;
 import com.sdp.hms.service.BookingService;
 import com.sdp.hms.service.RoomService;
 
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-
 /**
  * 
  * @author mahesh nidugala
@@ -68,6 +67,11 @@ public class PublicController {
 	@Autowired
 	private BookingRepository bookingRepository;
 
+	private final String checkInTime = "12:00:00";
+	private final String checkOutTime = "12:00:00";
+	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+	
 	@GetMapping("category")
 	public List<RoomCategory> getAllCategory() {
 		try {
@@ -114,13 +118,18 @@ public class PublicController {
 	}
 
 	@GetMapping("rooms")
-	public List<Rooms> getAllRooms(@RequestParam Optional<Boolean> isActive) {
+	public List<Rooms> getAllRooms(@RequestParam Optional<Boolean> isActive, @RequestParam String arrivalDate,
+			@RequestParam String deptDate) {
 		try {
+			LocalDateTime deptDateOfNewCustomer = LocalDateTime.parse(deptDate + " " + checkInTime,
+					formatter);
+			LocalDateTime arrivalDateOfNewCustomer = LocalDateTime
+					.parse(arrivalDate + " " + checkOutTime, formatter);
 			if (isActive.isPresent()) {
 
 				return roomRepository.findByIsActive(isActive.get());
 			} else {
-				return roomRepository.findAll();
+				return roomRepository.findByDates(arrivalDateOfNewCustomer, deptDateOfNewCustomer);
 			}
 		} catch (Exception e) {
 			if (e.getMessage() == "No value present") {
@@ -250,9 +259,9 @@ public class PublicController {
 	}
 
 	@PostMapping("user/bookings")
-	public Booking getBookingsByEmail(@RequestBody EmailDto emailDto) {
+	public List<Booking> getBookingsByEmail(@RequestBody EmailDto emailDto) {
 		try {
-			return bookingRepository.findByEmail(emailDto.getEmail());
+			return  bookingRepository.getBookingByEmail(emailDto.getEmail());
 		} catch (Exception e) {
 			if (e.getMessage() == "No value present") {
 				throw new NotFoundException(e.getMessage() + " for room with email id " + (emailDto.getEmail()));
@@ -270,6 +279,19 @@ public class PublicController {
 		try {
 			double estimatedRoomPrice = roomService.getEstimatedPrice(roomNumbers, arrivalDate, deptDate, isActive);
 			return Collections.singletonMap("estimatedPrice", estimatedRoomPrice);
+		} catch (ApiRequestException e) {
+			throw new ApiRequestException(e.getMessage());
+		} catch (Exception e) {
+			throw new InternalServerException(e.getMessage());
+		}
+
+	}
+
+	@GetMapping(value = "room/count")
+	public Map<String, Integer> getRoomCount(@RequestParam Long categoryId, @RequestParam Optional<Boolean> isActive) {
+		try {
+			Integer roomCount = roomRepository.findRoomCount(categoryId, isActive.get());
+			return Collections.singletonMap("totalRoomCount", roomCount);
 		} catch (ApiRequestException e) {
 			throw new ApiRequestException(e.getMessage());
 		} catch (Exception e) {

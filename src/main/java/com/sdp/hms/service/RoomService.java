@@ -28,9 +28,6 @@ import java.time.temporal.ChronoUnit;
 @Service
 public class RoomService {
 
-//	@Value("${online.getcategorybytitle.endpoint}")
-//	private String categpryApiPath;
-
 	@Autowired
 	private RoomRepository roomRepository;
 
@@ -50,6 +47,8 @@ public class RoomService {
 			rooms.setIsInventoryAvailable(roomdto.getIsInventoryAvailable());
 			rooms.setIsCleaned(roomdto.getIsCleaned());
 			rooms.setImageData(file.getBytes());
+			rooms.setArrivalDate(null);
+			rooms.setDeptDate(null);
 			roomRepository.save(rooms);
 		} catch (Exception e) {
 			throw e;
@@ -64,6 +63,8 @@ public class RoomService {
 		rooms.setIsInventoryAvailable(roomdto.getIsInventoryAvailable());
 		rooms.setIsCleaned(roomdto.getIsCleaned());
 		rooms.setImageData(file.getBytes());
+		rooms.setArrivalDate(null);
+		rooms.setDeptDate(null);
 		roomRepository.save(rooms);
 	}
 
