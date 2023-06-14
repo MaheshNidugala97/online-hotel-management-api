@@ -337,12 +337,18 @@ public class PublicController {
 	@DeleteMapping("booking/delete/id/{id}")
 	public ResponseEntity<?> deleteBooking(@PathVariable Long id) {
 		try {
-			bookingRepository.findById(id).get();
+			Booking booking = bookingRepository.findById(id).get();
 			bookingRepository.deleteById(id);
+			List<Integer> listOfRoomNumbers = new ArrayList<>();
+			for (Rooms room : booking.getRooms())
+			{
+				listOfRoomNumbers.add(room.getRoomNo());
+			}
+			roomRepository.updateRoomDates(null, null, listOfRoomNumbers);
 			return ResponseEntity.status(HttpStatus.OK).body("Booking with id " + id + " successfully deleted");
 		} catch (Exception e) {
 			if (e.getMessage() == "No value present") {
-				throw new NotFoundException(e.getMessage() + " for bookng with id " + id);
+				throw new NotFoundException(e.getMessage() + " for booking with id " + id);
 
 			} else {
 				throw new InternalServerException(e.getMessage());
