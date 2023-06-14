@@ -140,8 +140,8 @@ public class PublicController {
 	@GetMapping("rooms/available")
 	public List<Rooms> getAllRoomsByDate(@RequestParam String arrivalDate, @RequestParam String deptDate) {
 		try {
-			LocalDateTime deptDateOfNewCustomer = LocalDateTime.parse(deptDate + " " + checkInTime, formatter);
-			LocalDateTime arrivalDateOfNewCustomer = LocalDateTime.parse(arrivalDate + " " + checkOutTime, formatter);
+			LocalDateTime deptDateOfNewCustomer = LocalDateTime.parse(deptDate + " " + checkOutTime, formatter);
+			LocalDateTime arrivalDateOfNewCustomer = LocalDateTime.parse(arrivalDate + " " + checkInTime, formatter);
 			return roomRepository.findByDates(arrivalDateOfNewCustomer, deptDateOfNewCustomer);
 		} catch (Exception e) {
 			if (e.getMessage() == "No value present") {
@@ -300,9 +300,13 @@ public class PublicController {
 	}
 
 	@GetMapping(value = "room/count")
-	public Map<String, Integer> getRoomCount(@RequestParam Long categoryId, @RequestParam Optional<Boolean> isActive) {
+	public Map<String, Integer> getRoomCount(@RequestParam String arrivalDate, @RequestParam String deptDate,
+			@RequestParam Long categoryId) {
 		try {
-			Integer roomCount = roomRepository.findRoomCount(categoryId, isActive.get());
+			LocalDateTime deptDateOfNewCustomer = LocalDateTime.parse(deptDate + " " + checkOutTime, formatter);
+			LocalDateTime arrivalDateOfNewCustomer = LocalDateTime.parse(arrivalDate + " " + checkInTime, formatter);
+			Integer roomCount = roomRepository.findRoomCount(categoryId, arrivalDateOfNewCustomer,
+					deptDateOfNewCustomer);
 			return Collections.singletonMap("totalRoomCount", roomCount);
 		} catch (ApiRequestException e) {
 			throw new ApiRequestException(e.getMessage());
@@ -313,9 +317,12 @@ public class PublicController {
 	}
 
 	@GetMapping(value = "max/guests/category/id/{id}")
-	public Map<String, Integer> getMaxGuests(@PathVariable Long id, @RequestParam Optional<Boolean> isActive) {
+	public Map<String, Integer> getMaxGuests(@PathVariable Long id, @RequestParam String arrivalDate,
+			@RequestParam String deptDate) {
 		try {
-			Integer roomCount = roomRepository.findRoomCount(id, isActive.get());
+			LocalDateTime deptDateOfNewCustomer = LocalDateTime.parse(deptDate + " " + checkOutTime, formatter);
+			LocalDateTime arrivalDateOfNewCustomer = LocalDateTime.parse(arrivalDate + " " + checkInTime, formatter);
+			Integer roomCount = roomRepository.findRoomCount(id, arrivalDateOfNewCustomer, deptDateOfNewCustomer);
 			Integer maxPeopleAllowedInRoom = categoryRepository.getMaxPeopleAllowed(id);
 			Integer maxGuestAllowed = roomCount * maxPeopleAllowedInRoom;
 			return Collections.singletonMap("maxGuestAllowed", maxGuestAllowed);

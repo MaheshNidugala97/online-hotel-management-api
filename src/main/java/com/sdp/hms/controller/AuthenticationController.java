@@ -98,7 +98,7 @@ public class AuthenticationController {
 			user.setPhone(registrationDto.getPhone());
 			user.setPassword(passwordEncoder.encode(registrationDto.getPassword()));
 
-			Role roles = roleRepository.findByName("ADMIN").get();
+			Role roles = roleRepository.findByName("USER").get();
 			user.setRoles(List.of(roles));
 
 			userRepository.save(user);
