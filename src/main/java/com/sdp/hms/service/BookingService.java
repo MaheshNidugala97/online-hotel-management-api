@@ -70,11 +70,11 @@ public class BookingService {
 		List<Rooms> rooms = roomRepository.findByRoomNumbers(listRoomNumbers);
 		List<String> listOfParkings = new ArrayList<>();
 		if (bookingDto.getParkingList().isPresent()) {
-			for (NumberOfParkingDto aa : bookingDto.getParkingList().get()) {
-				double vehicleCost = parkingRepository.getVehicleCost(aa.getVehicleType());
-				Integer no = aa.getNumberOfVehicles();
-				parkingPrice = parkingPrice + vehicleCost * no;
-				listOfParkings.add(aa.getVehicleType());
+			for (NumberOfParkingDto numberOfParkingDto : bookingDto.getParkingList().get()) {
+				double vehicleCost = parkingRepository.getVehicleCost(numberOfParkingDto.getVehicleType());
+				Integer numberOfVehicles = numberOfParkingDto.getNumberOfVehicles();
+				parkingPrice = parkingPrice + vehicleCost * numberOfVehicles;
+				listOfParkings.add(numberOfParkingDto.getVehicleType());
 			}
 			List<Parking> parking = parkingRepository.findByListOfVehicleType(listOfParkings);
 			long numberOfDays = roomService.calculateDays(bookingDto.getArrivalDate(), bookingDto.getDepartureDate());
@@ -118,47 +118,5 @@ public class BookingService {
 		}
 		return null;
 	}
-
-//	public void updateBookings(Booking booking, List<Guests> listOfGuest, String roomNumbers, BookingDto bookingDto) {
-//		double finalPrice = Double.valueOf((String) bookingDto.getTotalCost());
-//		double parkingPrice = 0.0;
-//		booking.setEmail(bookingDto.getEmail());
-//		List<Guests> guests = new ArrayList<>();
-//		listOfGuest.stream().forEach((guest) -> {
-//
-//			guests.add(new Guests(guest.getName()));
-//
-//		});
-//		List<Guests> listOfGuests = guestRepository.saveAll(guests);
-//		List<Integer> listRoomNumbers = new ArrayList<>();
-//		String[] arrayRoomNumbers = roomNumbers.split(",");
-//		for (String roomNumber : arrayRoomNumbers) {
-//			Integer roomNo = Integer.parseInt(roomNumber);
-//			listRoomNumbers.add(roomNo);
-//		}
-//		List<Rooms> rooms = roomRepository.findByRoomNumbers(listRoomNumbers);
-//		booking.setGuests(guests);
-//		booking.setRooms(rooms);
-//		booking.setGuests(listOfGuests);
-//		booking.setArrivalDate(LocalDateTime.parse(bookingDto.getArrivalDate() + " " + checkInTime, formatter));
-//		booking.setDepartureDate(LocalDateTime.parse(bookingDto.getArrivalDate() + " " + checkOutTime, formatter));
-//		booking.setNumberOfGuests(bookingDto.getNumberOfGuests());
-//		List<String> listOfParkings = new ArrayList<>();
-//		for (NumberOfParkingDto aa : bookingDto.getParkingList().get()) {
-//			double vehicleCost = parkingRepository.getVehicleCost(aa.getVehicleType());
-//			Integer no = aa.getNumberOfVehicles();
-//			parkingPrice = parkingPrice + vehicleCost * no;
-//			listOfParkings.add(aa.getVehicleType());
-//		}
-//		List<Parking> parking = parkingRepository.findByListOfVehicleType(listOfParkings);
-//		long numberOfDays = roomService.calculateDays(bookingDto.getArrivalDate(), bookingDto.getDepartureDate());
-//		finalPrice = finalPrice + parkingPrice * numberOfDays;
-//		booking.setParking(parking);
-//		booking.setTotalCost(finalPrice);
-//		booking.setPaymentType(bookingDto.getPaymentType());
-//		bookingRepository.save(booking);
-//		roomRepository.updateRoomsToInactive(listRoomNumbers);
-//
-//	}
 
 }
