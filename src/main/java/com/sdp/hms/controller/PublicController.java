@@ -71,7 +71,6 @@ public class PublicController {
 	private final String checkOutTime = "12:00:00";
 	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-	
 	@GetMapping("category")
 	public List<RoomCategory> getAllCategory() {
 		try {
@@ -118,19 +117,31 @@ public class PublicController {
 	}
 
 	@GetMapping("rooms")
-	public List<Rooms> getAllRooms(@RequestParam Optional<Boolean> isActive, @RequestParam String arrivalDate,
-			@RequestParam String deptDate) {
+	public List<Rooms> getAllRooms(@RequestParam Optional<Boolean> isActive) {
 		try {
-			LocalDateTime deptDateOfNewCustomer = LocalDateTime.parse(deptDate + " " + checkInTime,
-					formatter);
-			LocalDateTime arrivalDateOfNewCustomer = LocalDateTime
-					.parse(arrivalDate + " " + checkOutTime, formatter);
 			if (isActive.isPresent()) {
 
 				return roomRepository.findByIsActive(isActive.get());
 			} else {
-				return roomRepository.findByDates(arrivalDateOfNewCustomer, deptDateOfNewCustomer);
+				return roomRepository.findAll();
 			}
+		} catch (Exception e) {
+			if (e.getMessage() == "No value present") {
+				throw new NotFoundException(e.getMessage());
+
+			} else {
+				throw new InternalServerException(e.getMessage());
+			}
+		}
+
+	}
+
+	@GetMapping("rooms/available")
+	public List<Rooms> getAllRoomsByDate(@RequestParam String arrivalDate, @RequestParam String deptDate) {
+		try {
+			LocalDateTime deptDateOfNewCustomer = LocalDateTime.parse(deptDate + " " + checkInTime, formatter);
+			LocalDateTime arrivalDateOfNewCustomer = LocalDateTime.parse(arrivalDate + " " + checkOutTime, formatter);
+			return roomRepository.findByDates(arrivalDateOfNewCustomer, deptDateOfNewCustomer);
 		} catch (Exception e) {
 			if (e.getMessage() == "No value present") {
 				throw new NotFoundException(e.getMessage());
@@ -261,7 +272,7 @@ public class PublicController {
 	@PostMapping("user/bookings")
 	public List<Booking> getBookingsByEmail(@RequestBody EmailDto emailDto) {
 		try {
-			return  bookingRepository.getBookingByEmail(emailDto.getEmail());
+			return bookingRepository.getBookingByEmail(emailDto.getEmail());
 		} catch (Exception e) {
 			if (e.getMessage() == "No value present") {
 				throw new NotFoundException(e.getMessage() + " for room with email id " + (emailDto.getEmail()));
@@ -292,6 +303,22 @@ public class PublicController {
 		try {
 			Integer roomCount = roomRepository.findRoomCount(categoryId, isActive.get());
 			return Collections.singletonMap("totalRoomCount", roomCount);
+		} catch (ApiRequestException e) {
+			throw new ApiRequestException(e.getMessage());
+		} catch (Exception e) {
+			throw new InternalServerException(e.getMessage());
+		}
+
+	}
+
+	@GetMapping(value = "max/guests/category/id/{id}")
+	public Map<String, Integer> getMaxGuests( @PathVariable Long id,
+			@RequestParam Optional<Boolean> isActive) {
+		try {
+			Integer roomCount = roomRepository.findRoomCount(id, isActive.get());
+			Integer maxPeopleAllowedInRoom= categoryRepository.getMaxPeopleAllowed(id);
+			Integer maxGuestAllowed= roomCount*maxPeopleAllowedInRoom;
+			return Collections.singletonMap("maxGuestAllowed", maxGuestAllowed);
 		} catch (ApiRequestException e) {
 			throw new ApiRequestException(e.getMessage());
 		} catch (Exception e) {

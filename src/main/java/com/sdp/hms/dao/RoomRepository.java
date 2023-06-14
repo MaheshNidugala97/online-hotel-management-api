@@ -54,7 +54,7 @@ public interface RoomRepository extends JpaRepository<Rooms, Long> {
 	@Query("UPDATE Rooms r SET r.arrivalDate=:arrivalDate, r.deptDate=:deptDate where r.roomNo IN (:roomNumbers)")
 	void updateRoomDates(LocalDateTime arrivalDate, LocalDateTime deptDate, List<Integer> roomNumbers);
 
-	@Query("SELECT r from Rooms r where r.arrivalDate>?2 or r.deptDate<?1 or r.arrivalDate is null or r.deptDate is null")
+	@Query("SELECT r from Rooms r where r.arrivalDate>?2 or r.deptDate<?1 or r.arrivalDate is null or r.deptDate is null and r.isActive=true")
 	List<Rooms> findByDates(LocalDateTime arrivalDateOfNewCustomer, LocalDateTime deptDateOfNewCustomer);
 	
 }
