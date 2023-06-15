@@ -25,7 +25,6 @@ import org.springframework.web.multipart.MultipartFile;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sdp.hms.dao.BookingRepository;
 import com.sdp.hms.dao.CategoryRepository;
-import com.sdp.hms.dao.GuestRepository;
 import com.sdp.hms.dao.ParkingRepository;
 import com.sdp.hms.dao.RoomRepository;
 import com.sdp.hms.dao.TransactionRepository;
@@ -43,7 +42,6 @@ import com.sdp.hms.entity.Transaction;
 import com.sdp.hms.exception.ApiRequestException;
 import com.sdp.hms.exception.InternalServerException;
 import com.sdp.hms.exception.NotFoundException;
-import com.sdp.hms.service.BookingService;
 import com.sdp.hms.service.CategoryService;
 import com.sdp.hms.service.ParkingService;
 import com.sdp.hms.service.RoomService;
@@ -80,12 +78,6 @@ public class AdminController {
 
 	@Autowired
 	private BookingRepository bookingRepository;
-
-	@Autowired
-	private BookingService bookingService;
-
-	@Autowired
-	private GuestRepository guestRepository;
 
 	@Autowired
 	private TransactionService transactionService;

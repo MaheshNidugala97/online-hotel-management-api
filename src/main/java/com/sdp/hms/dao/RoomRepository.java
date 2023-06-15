@@ -57,5 +57,5 @@ public interface RoomRepository extends JpaRepository<Rooms, Long> {
 
 	@Query(value = "SELECT count(r.room_no) from rooms r where (r.category=?1 and r.active=true) and (r.arrival_date>?3 or r.departure_date<?2 or r.arrival_date is null or r.departure_date is null) ", nativeQuery = true)
 	Integer findRoomCountByDates(Long id, LocalDateTime arrivalDateOfNewCustomer, LocalDateTime deptDateOfNewCustomer);
-	
+
 }

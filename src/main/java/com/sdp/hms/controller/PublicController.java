@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.sdp.hms.dao.BookingRepository;
 import com.sdp.hms.dao.CategoryRepository;
-import com.sdp.hms.dao.GuestRepository;
 import com.sdp.hms.dao.ParkingRepository;
 import com.sdp.hms.dao.RoomRepository;
 import com.sdp.hms.dto.BookingDto;
@@ -55,9 +54,6 @@ public class PublicController {
 
 	@Autowired
 	private ParkingRepository parkingRepository;
-
-	@Autowired
-	private GuestRepository guestRepository;
 
 	@Autowired
 	private BookingService bookingService;

@@ -29,12 +29,10 @@ public class TransactionService {
 
 	@Autowired
 	RoomRepository roomRepository;
-	
 
 	private final String checkInTime = "12:00:00";
 	private final String checkOutTime = "12:00:00";
 	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-
 
 	public void checkout(String roomNumbers, CheckoutDto checkoutDto) {
 		List<Integer> listRoomNumbers = new ArrayList<>();
